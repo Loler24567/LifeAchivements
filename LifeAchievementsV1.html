@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeAchievements</title>
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --border: #334155;
+            
+            /* Rarity Colors */
+            --rarity-common: #94a3b8;
+            --rarity-uncommon: #22c55e;
+            --rarity-rare: #3b82f6;
+            --rarity-epic: #a855f7;
+            --rarity-legendary: #f97316;
+            --rarity-mythic: #ef4444;
+            
+            --anim-speed: 0.3s;
+        }
+
+        .light-theme {
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-input: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent: #4f46e5;
+            --accent-hover: #4338ca;
+            --border: #e2e8f0;
+        }
+
+        .no-animations * {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            transition: background-color var(--anim-speed), color var(--anim-speed);
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--accent), #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .global-medal {
+            font-size: 14px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .stat-box {
+            background: var(--bg-main);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-val {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-lbl {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .progress-container {
+            background: var(--bg-input);
+            border-radius: 8px;
+            height: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            background: linear-gradient(to right, var(--accent), #22c55e);
+            height: 100%;
+            width: 0%;
+            transition: width var(--anim-speed) ease;
+        }
+
+        /* Controls Section */
+        .controls-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background var(--anim-speed);
+        }
+
+        .btn:hover { background: var(--accent-hover); }
+        .btn-secondary { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--bg-input); }
+        .btn-danger { background: var(--rarity-mythic); }
+        .btn-danger:hover { background: #b91c1c; }
+
+        /* Filters */
+        .filters-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            scrollbar-width: none;
+        }
+        .filters-container::-webkit-scrollbar { display: none; }
+
+        .filter-tag {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all var(--anim-speed);
+        }
+
+        .filter-tag.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Achievements Grid */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media(min-width: 640px) {
+            .achievements-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+            overflow: hidden;
+        }
+
+        .card.completed {
+            border-left: 4px solid var(--rarity-uncommon);
+            opacity: 0.85;
+        }
+
+        /* Image Display styles */
+        .card-image-wrap {
+            width: 100%;
+            height: 140px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            background: var(--bg-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+        }
+
+        .card-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-image-placeholder {
+            font-size: 40px;
+            opacity: 0.3;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            gap: 8px;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            flex-grow: 1;
+            word-break: break-word;
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .badge-rarity { color: #fff; }
+        .badge-cat { background: var(--bg-input); color: var(--text-muted); }
+        .badge-type { background: rgba(99, 102, 241, 0.15); color: var(--accent); }
+
+        .card-interactive {
+            background: var(--bg-main);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+        }
+
+        .card-progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-left { display: flex; gap: 6px; }
+        .btn-sm { padding: 6px 10px; font-size: 12px; border-radius: 8px; }
+
+        .checkbox-btn {
+            background: var(--bg-input);
+            border: 2px solid var(--border);
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: transparent;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all var(--anim-speed);
+        }
+        .checkbox-btn.checked {
+            background: var(--rarity-uncommon);
+            border-color: var(--rarity-uncommon);
+            color: white;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top:0; left:0; right:0; bottom:0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 16px;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .modal-close-corner {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-right: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        /* Preview Image Area */
+        .image-preview-box {
+            width: 100%;
+            height: 120px;
+            background: var(--bg-main);
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .image-preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Celebration Animation Overlay */
+        #celebration-overlay {
+            position: fixed;
+            top:0; left:0; right:0; bottom:0;
+            background: rgba(15, 23, 42, 0.9);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .medal-anim {
+            font-size: 80px;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            margin-bottom: 20px;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .confetti-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: fall 3s linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Utility classes */
+        .d-none { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header Dashboard -->
+        <header>
+            <div class="header-top">
+                <div class="header-title">
+                    <h1>LifeAchievements</h1>
+                    <div class="global-medal" id="global-medal">🥈 Серебро</div>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn btn-secondary btn-sm" id="btn-stats" onclick="toggleModal('modal-stats', true)">📊 Статы</button>
+                    <button class="btn btn-secondary btn-sm" onclick="toggleModal('modal-settings', true)">⚙️</button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-val" id="stat-total-ap">0</div>
+                    <div class="stat-lbl">Всего AP</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-val" id="stat-count-done">0/0</div>
+                    <div class="stat-lbl">Выполнено</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-val" id="stat-percent">0%</div>
+                    <div class="stat-lbl">Прогресс</div>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="global-progress-bar"></div>
+            </div>
+        </header>
+
+        <!-- Search and Action Area -->
+        <div class="controls-row">
+            <input type="text" class="search-input" id="search-bar" placeholder="Поиск по названию и описанию..." oninput="render()">
+            <button class="btn" onclick="openCreateModal()">➕ Создать</button>
+        </div>
+
+        <!-- Filters Grid Carousel -->
+        <div class="filters-container" id="filters-list">
+            <!-- Dynamic Category and Status filter tags go here -->
+        </div>
+
+        <!-- Achievements Grid -->
+        <main class="achievements-grid" id="achievements-container">
+            <!-- Dynamic cards go here -->
+        </main>
+    </div>
+
+    <!-- CREATE / EDIT MODAL -->
+    <div class="modal-overlay" id="modal-achievement" onclick="handleOverlayClick(event, 'modal-achievement')">
+        <div class="modal">
+            <button type="button" class="modal-close-corner" onclick="toggleModal('modal-achievement', false)">✕</button>
+            <div class="modal-title" id="modal-ach-title">Создать достижение</div>
+            <form id="ach-form" onsubmit="saveAchievement(event)">
+                <input type="hidden" id="form-id">
+                
+                <div class="form-group">
+                    <label>Название</label>
+                    <input type="text" id="form-title" class="form-control" required placeholder="Напр: Прочесть книгу">
+                </div>
+                <div class="form-group">
+                    <label>Описание</label>
+                    <textarea id="form-desc" class="form-control" rows="2" placeholder="Детали достижения..."></textarea>
+                </div>
+
+                <!-- NEW: Image Loader Field -->
+                <div class="form-group">
+                    <label>Изображение (по желанию)</label>
+                    <input type="file" id="form-image-input" class="form-control" accept="image/*" onchange="previewImage(event)">
+                    <div class="image-preview-box" id="form-image-preview">
+                        <span style="font-size:13px; color:var(--text-muted);">Нет изображения</span>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Категория</label>
+                        <select id="form-cat" class="form-control" onchange="checkCustomCategory(this.value)">
+                            <!-- Будет заполнено динамически -->
+                        </select>
+                    </div>
+                    <div class="form-group d-none" id="custom-cat-wrapper">
+                        <label>Название категории</label>
+                        <input type="text" id="form-custom-cat" class="form-control" placeholder="Новая категория">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Редкость</label>
+                        <select id="form-rarity" class="form-control">
+                            <option value="common">Обычное (10 AP)</option>
+                            <option value="uncommon">Необычное (15 AP)</option>
+                            <option value="rare">Редкое (25 AP)</option>
+                            <option value="epic">Эпическое (50 AP)</option>
+                            <option value="legendary">Легендарное (100 AP)</option>
+                            <option value="mythic">Мифическое (150 AP)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Тип</label>
+                        <select id="form-type" class="form-control">
+                            <option value="one-time">Одноразовое</option>
+                            <option value="repeatable">Повторяемое</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Использовать прогресс?</label>
+                    <select id="form-has-progress" class="form-control" onchange="toggleFormProgressFields(this.value === 'yes')">
+                        <option value="no">Нет (просто галочка)</option>
+                        <option value="yes">Да (шкала с числами)</option>
+                    </select>
+                </div>
+
+                <div class="form-row d-none" id="form-progress-fields">
+                    <div class="form-group">
+                        <label>Текущее значение</label>
+                        <input type="number" id="form-current" class="form-control" value="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Максимальное значение</label>
+                        <input type="number" id="form-max" class="form-control" value="10" min="1">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="toggleModal('modal-achievement', false)">Отмена</button>
+                    <button type="submit" class="btn">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div class="modal-overlay" id="modal-settings" onclick="handleOverlayClick(event, 'modal-settings')">
+        <div class="modal">
+            <button type="button" class="modal-close-corner" onclick="toggleModal('modal-settings', false)">✕</button>
+            <div class="modal-title">Настройки приложения</div>
+            
+            <div class="form-group">
+                <label>Тема оформления</label>
+                <select id="setting-theme" class="form-control" onchange="applyTheme(this.value)">
+                    <option value="dark">Тёмная</option>
+                    <option value="light">Светлая</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Интерфейс</label>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 5px;">
+                    <label style="display:flex; align-items:center; gap:8px; color:var(--text-main)">
+                        <input type="checkbox" id="setting-anim" checked> Включить анимации
+                    </label>
+                    <label style="display:flex; align-items:center; gap:8px; color:var(--text-main)">
+                        <input type="checkbox" id="setting-sound" checked> Включить звук
+                    </label>
+                </div>
+            </div>
+
+            <hr style="border-color: var(--border); margin: 20px 0;">
+
+            <div class="form-group">
+                <label>Резервное копирование (JSON)</label>
+                <div style="display:flex; gap:10px; margin-top: 8px;">
+                    <button class="btn btn-secondary btn-sm" onclick="exportData()" style="flex:1">📥 Экспорт</button>
+                    <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-file').click()" style="flex:1">📤 Импорт</button>
+                    <input type="file" id="import-file" class="d-none" accept=".json" onchange="importData(event)">
+                </div>
+            </div>
+
+            <div class="modal-footer" style="justify-content: space-between;">
+                <button class="btn btn-danger btn-sm" onclick="clearAllData()">⚠️ Сбросить всё</button>
+                <button class="btn btn-secondary" onclick="saveSettings()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STATS MODAL -->
+    <div class="modal-overlay" id="modal-stats" onclick="handleOverlayClick(event, 'modal-stats')">
+        <div class="modal">
+            <button type="button" class="modal-close-corner" onclick="toggleModal('modal-stats', false)">✕</button>
+            <div class="modal-title">Подробная статистика</div>
+            <div id="detailed-stats-content" style="display:flex; flex-direction:column; gap:12px;">
+                <!-- Filled dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="toggleModal('modal-stats', false)">Отлично</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CELEBRATION SCREEN OVERLAY -->
+    <div id="celebration-overlay">
+        <div class="medal-anim" id="cel-medal">🏆</div>
+        <h2 style="font-size: 28px; font-weight:800; margin-bottom:10px; color:#fff;" id="cel-title">ДОСТИЖЕНИЕ ПОЛУЧЕНО!</h2>
+        <p style="font-size: 18px; color: var(--rarity-legendary); font-weight:700; margin-bottom: 6px;" id="cel-rarity">Легендарное</p>
+        <p style="font-size: 16px; color:#e2e8f0; margin-bottom: 20px;" id="cel-ach-name">Название достижения</p>
+        <div style="font-size: 20px; font-weight:bold; background:rgba(255,255,255,0.2); padding:8px 20px; border-radius:30px; color:#fff;">
+            + <span id="cel-ap">100</span> AP
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const RARITIES = {
+            common: { name: 'Обычное', ap: 10, color: 'var(--rarity-common)', icon: '⚪' },
+            uncommon: { name: 'Необычное', ap: 15, color: 'var(--rarity-uncommon)', icon: '🟢' },
+            rare: { name: 'Редкое', ap: 25, color: 'var(--rarity-rare)', icon: '🔵' },
+            epic: { name: 'Эпическое', ap: 50, color: 'var(--rarity-epic)', icon: '🟣' },
+            legendary: { name: 'Легендарное', ap: 100, color: 'var(--rarity-legendary)', icon: '🟠' },
+            mythic: { name: 'Мифическое', ap: 150, color: 'var(--rarity-mythic)', icon: '🔴' }
+        };
+
+        let state = {
+            achievements: [],
+            categories: ['Учёба', 'Спорт', 'Жизнь', 'Игры', 'Шуточные', 'Другое'],
+            settings: { theme: 'dark', animations: true, sound: true },
+            activeFilter: 'all'
+        };
+
+        // Переменная для временного хранения base64 загруженной картинки
+        let currentUploadedImageBase64 = '';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadFromStorage();
+            applyTheme(state.settings.theme);
+            applyAnimationSetting();
+            syncSettingsForm();
+            render();
+        });
+
+        function saveToStorage() {
+            localStorage.setItem('life_achievements_state', JSON.stringify(state));
+        }
+
+        function loadFromStorage() {
+            const saved = localStorage.getItem('life_achievements_state');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    state.achievements = parsed.achievements || [];
+                    state.categories = parsed.categories || ['Учёба', 'Спорт', 'Жизнь', 'Игры', 'Шуточные', 'Другое'];
+                    state.settings = parsed.settings || { theme: 'dark', animations: true, sound: true };
+                    state.activeFilter = parsed.activeFilter || 'all';
+                } catch(e) {
+                    console.error("Ошибка загрузки данных", e);
+                }
+            }
+        }
+
+        // Обработка загрузки и превью картинки
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Чтобы не перегружать LocalStorage, сжимаем картинку через Canvas
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Максимальное разрешение для карточки (ширина 400px вполне достаточно)
+                    const maxW = 400;
+                    const scale = maxW / img.width;
+                    canvas.width = maxW;
+                    canvas.height = img.height * scale;
+                    
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    // Переводим в сжатый base64 jpeg string
+                    currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                    
+                    // Показываем превью в форме
+                    document.getElementById('form-image-preview').innerHTML = `<img src="${currentUploadedImageBase64}">`;
+                }
+            };
+            // ОШИБКА ИСПРАВЛЕНА: удалена конфликтующая строка readAsText
+            reader.readAsDataURL(file);
+        }
+
+        function playChime() {
+            if (!state.settings.sound) return;
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                const now = ctx.currentTime;
+                
+                let osc1 = ctx.createOscillator(); let gain1 = ctx.createGain();
+                osc1.type = 'sine'; osc1.frequency.setValueAtTime(523.25, now);
+                gain1.gain.setValueAtTime(0.3, now); gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc1.connect(gain1); gain1.connect(ctx.destination); osc1.start(now); osc1.stop(now + 0.4);
+
+                let osc2 = ctx.createOscillator(); let gain2 = ctx.createGain();
+                osc2.type = 'sine'; osc2.frequency.setValueAtTime(659.25, now + 0.1);
+                gain2.gain.setValueAtTime(0.3, now + 0.1); gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                osc2.connect(gain2); gain2.connect(ctx.destination); osc2.start(now + 0.1); osc2.stop(now + 0.5);
+
+                let osc3 = ctx.createOscillator(); let gain3 = ctx.createGain();
+                osc3.type = 'sine'; osc3.frequency.setValueAtTime(783.99, now + 0.2);
+                gain3.gain.setValueAtTime(0.4, now + 0.2); gain3.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
+                osc3.connect(gain3); gain3.connect(ctx.destination); osc3.start(now + 0.2); osc3.stop(now + 0.8);
+            } catch(e) {}
+        }
+
+        function toggleModal(modalId, show) {
+            document.getElementById(modalId).style.display = show ? 'flex' : 'none';
+        }
+
+        function handleOverlayClick(e, modalId) {
+            if (e.target.id === modalId) toggleModal(modalId, false);
+        }
+
+        function openCreateModal() {
+            document.getElementById('modal-ach-title').innerText = "Создать достижение";
+            document.getElementById('ach-form').reset();
+            document.getElementById('form-id').value = '';
+            currentUploadedImageBase64 = '';
+            document.getElementById('form-image-preview').innerHTML = `<span style="font-size:13px; color:var(--text-muted);">Нет изображения</span>`;
+            document.getElementById('custom-cat-wrapper').classList.add('d-none');
+            toggleFormProgressFields(false);
+            updateCategorySelectOptions();
+            toggleModal('modal-achievement', true);
+        }
+
+        function checkCustomCategory(val) {
+            const wrapper = document.getElementById('custom-cat-wrapper');
+            if (val === '__custom__') {
+                wrapper.classList.remove('d-none');
+                document.getElementById('form-custom-cat').required = true;
+            } else {
+                wrapper.classList.add('d-none');
+                document.getElementById('form-custom-cat').required = false;
+            }
+        }
+
+        function toggleFormProgressFields(show) {
+            const fields = document.getElementById('form-progress-fields');
+            if(show) fields.classList.remove('d-none');
+            else fields.classList.add('d-none');
+        }
+
+        function saveAchievement(e) {
+            e.preventDefault();
+            const id = document.getElementById('form-id').value;
+            const title = document.getElementById('form-title').value.trim();
+            const desc = document.getElementById('form-desc').value.trim();
+            let category = document.getElementById('form-cat').value;
+            const rarity = document.getElementById('form-rarity').value;
+            const type = document.getElementById('form-type').value;
+            const hasProgress = document.getElementById('form-has-progress').value === 'yes';
+            
+            if (category === '__custom__') {
+                const customCat = document.getElementById('form-custom-cat').value.trim();
+                if(customCat && !state.categories.includes(customCat)) {
+                    state.categories.push(customCat);
+                }
+                category = customCat || 'Другое';
+            }
+
+            let current = 0;
+            let max = 1;
+            let completed = false;
+
+            if (hasProgress) {
+                current = parseInt(document.getElementById('form-current').value) || 0;
+                max = parseInt(document.getElementById('form-max').value) || 1;
+                if (current >= max) {
+                    current = max;
+                    completed = true;
+                }
+            }
+
+            if (id) {
+                const ach = state.achievements.find(a => a.id === id);
+                if (ach) {
+                    const wasCompleted = ach.completed;
+                    ach.title = title;
+                    ach.desc = desc;
+                    ach.category = category;
+                    ach.rarity = rarity;
+                    ach.type = type;
+                    ach.hasProgress = hasProgress;
+                    ach.current = current;
+                    ach.max = max;
+                    ach.completed = completed;
+                    // Если картинка была загружена заново, обновляем её, иначе оставляем старую
+                    if(currentUploadedImageBase64) ach.image = currentUploadedImageBase64;
+                    
+                    if (completed && !wasCompleted) triggerCelebration(ach);
+                }
+            } else {
+                const newAch = {
+                    id: Date.now().toString(),
+                    title, desc, category, rarity, type, hasProgress, current, max, completed,
+                    image: currentUploadedImageBase64,
+                    level: 0
+                };
+                state.achievements.push(newAch);
+                if (completed) triggerCelebration(newAch);
+            }
+
+            saveToStorage();
+            toggleModal('modal-achievement', false);
+            render();
+        }
+
+        function deleteAchievement(id) {
+            if(confirm("Удалить это достижение?")) {
+                state.achievements = state.achievements.filter(a => a.id !== id);
+                saveToStorage();
+                render();
+            }
+        }
+
+        function editAchievement(id) {
+            const ach = state.achievements.find(a => a.id === id);
+            if(!ach) return;
+
+            document.getElementById('modal-ach-title').innerText = "Редактировать достижение";
+            document.getElementById('form-id').value = ach.id;
+            document.getElementById('form-title').value = ach.title;
+            document.getElementById('form-desc').value = ach.desc;
+            
+            // Восстановление картинки при редактировании
+            currentUploadedImageBase64 = ach.image || '';
+            if(ach.image) {
+                document.getElementById('form-image-preview').innerHTML = `<img src="${ach.image}">`;
+            } else {
+                document.getElementById('form-image-preview').innerHTML = `<span style="font-size:13px; color:var(--text-muted);">Нет изображения</span>`;
+            }
+
+            updateCategorySelectOptions();
+            document.getElementById('form-cat').value = ach.category;
+            document.getElementById('custom-cat-wrapper').classList.add('d-none');
+
+            document.getElementById('form-rarity').value = ach.rarity;
+            document.getElementById('form-type').value = ach.type;
+            document.getElementById('form-has-progress').value = ach.hasProgress ? 'yes' : 'no';
+            toggleFormProgressFields(ach.hasProgress);
+            document.getElementById('form-current').value = ach.current;
+            document.getElementById('form-max').value = ach.max;
+
+            toggleModal('modal-achievement', true);
+        }
+
+        function updateCategorySelectOptions() {
+            const select = document.getElementById('form-cat');
+            if(!select) return;
+            let html = '';
+            state.categories.forEach(c => {
+                html += `<option value="${c}">${c}</option>`;
+            });
+            html += `<option value="__custom__">+ Своя категория...</option>`;
+            select.innerHTML = html;
+        }
+
+        function toggleSimpleComplete(id) {
+            const ach = state.achievements.find(a => a.id === id);
+            if (!ach) return;
+            
+            ach.completed = !ach.completed;
+            if (ach.completed) {
+                if (ach.type === 'repeatable') {
+                    ach.level = (ach.level || 0) + 1;
+                    ach.completed = false; 
+                }
+                triggerCelebration(ach);
+            }
+            saveToStorage();
+            render();
+        }
+
+        function adjustProgress(id, amount) {
+            const ach = state.achievements.find(a => a.id === id);
+            if (!ach) return;
+            ach.current = Math.max(0, ach.current + amount);
+            checkProgressTarget(ach);
+        }
+
+        function manualProgressInput(id, value) {
+            const ach = state.achievements.find(a => a.id === id);
+            if (!ach) return;
+            ach.current = Math.max(0, parseInt(value) || 0);
+            checkProgressTarget(ach);
+        }
+
+        function checkProgressTarget(ach) {
+            if (ach.current >= ach.max) {
+                if (ach.type === 'one-time') {
+                    ach.current = ach.max;
+                    if (!ach.completed) {
+                        ach.completed = true;
+                        triggerCelebration(ach);
+                    }
+                } else {
+                    ach.level = (ach.level || 0) + 1;
+                    ach.current = 0;
+                    triggerCelebration(ach);
+                }
+            }
+            saveToStorage();
+            render();
+        }
+
+        function calculateStats() {
+            let totalAP = 0; let doneCount = 0;
+            state.achievements.forEach(ach => {
+                const itemAp = RARITIES[ach.rarity].ap;
+                if (ach.type === 'repeatable') totalAP += (ach.level || 0) * itemAp;
+                else if (ach.completed) totalAP += itemAp;
+
+                if (ach.completed || (ach.type === 'repeatable' && (ach.level || 0) > 0)) doneCount++;
+            });
+
+            const totalCount = state.achievements.length;
+            const percent = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
+
+            let medal = "🥚 Новичок";
+            if (totalAP >= 2500) medal = "👑 Корона";
+            else if (totalAP >= 1000) medal = "💎 Алмаз";
+            else if (totalAP >= 500) medal = "🥇 Золото";
+            else if (totalAP >= 250) medal = "🥈 Серебро";
+            else if (totalAP >= 100) medal = "🥉 Бронза";
+
+            return { totalAP, doneCount, totalCount, percent, medal };
+        }
+
+        function triggerCelebration(ach) {
+            const overlay = document.getElementById('celebration-overlay');
+            document.getElementById('cel-ach-name').innerText = ach.title;
+            document.getElementById('cel-rarity').innerText = RARITIES[ach.rarity].name;
+            document.getElementById('cel-rarity').style.color = RARITIES[ach.rarity].color;
+            document.getElementById('cel-ap').innerText = RARITIES[ach.rarity].ap;
+
+            const medals = ['🏆', '🏅', '⭐', '✨', '👑'];
+            document.getElementById('cel-medal').innerText = medals[Math.floor(Math.random() * medals.length)];
+
+            overlay.style.display = 'flex';
+            playChime();
+            createConfetti();
+
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                const particles = document.querySelectorAll('.confetti-particle');
+                particles.forEach(p => p.remove());
+            }, 3500);
+        }
+
+        function createConfetti() {
+            if (!state.settings.animations) return;
+            const container = document.getElementById('celebration-overlay');
+            const colors = ['#f43f5e', '#3b82f6', '#eab308', '#22c55e', '#a855f7', '#f97316'];
+            for (let i = 0; i < 60; i++) {
+                const p = document.createElement('div');
+                p.classList.add('confetti-particle');
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                p.style.transform = `scale(${Math.random() * 1.2 + 0.5})`;
+                p.style.animationDelay = Math.random() * 2 + 's';
+                p.style.animationDuration = Math.random() * 1.5 + 1.5 + 's';
+                container.appendChild(p);
+            }
+        }
+
+        function render() {
+            const calc = calculateStats();
+            document.getElementById('stat-total-ap').innerText = calc.totalAP;
+            document.getElementById('stat-count-done').innerText = `${calc.doneCount}/${calc.totalCount}`;
+            document.getElementById('stat-percent').innerText = `${calc.percent}%`;
+            document.getElementById('global-progress-bar').style.width = `${calc.percent}%`;
+            document.getElementById('global-medal').innerText = calc.medal;
+
+            renderFilters();
+
+            const container = document.getElementById('achievements-container');
+            container.innerHTML = '';
+            const searchQuery = document.getElementById('search-bar').value.toLowerCase();
+
+            let filtered = state.achievements.filter(ach => {
+                const matchSearch = ach.title.toLowerCase().includes(searchQuery) || ach.desc.toLowerCase().includes(searchQuery);
+                if (!matchSearch) return false;
+
+                const f = state.activeFilter;
+                if (f === 'all') return true;
+                if (f === 'one-time') return ach.type === 'one-time';
+                if (f === 'repeatable') return ach.type === 'repeatable';
+                if (f === 'completed') return ach.completed || (ach.type === 'repeatable' && ach.level > 0);
+                if (f === 'uncompleted') return !ach.completed && (ach.type !== 'repeatable' || ach.level === 0);
+                if (RARITIES[f]) return ach.rarity === f;
+                return ach.category === f;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-muted);">Ничего не найдено 🤔</div>`;
+                return;
+            }
+
+            filtered.forEach(ach => {
+                const rarityData = RARITIES[ach.rarity];
+                const isDone = ach.completed || (ach.type === 'repeatable' && ach.level > 0);
+                
+                // Блок картинки: отображает картинку или красивую заглушку-иконку редкости
+                let imgBlockHtml = '';
+                if(ach.image) {
+                    imgBlockHtml = `<div class="card-image-wrap"><img src="${ach.image}" alt=""></div>`;
+                } else {
+                    imgBlockHtml = `<div class="card-image-wrap"><div class="card-image-placeholder">${rarityData.icon}</div></div>`;
+                }
+
+                let cardHtml = `
+                    <div class="card ${isDone ? 'completed' : ''}">
+                        <div>
+                            ${imgBlockHtml}
+                            <div class="card-header">
+                                <div class="card-title">${ach.title}</div>
+                                <div style="font-weight:bold; color:${rarityData.color}; font-size:14px; white-space:nowrap;">
+                                    +${rarityData.ap} AP
+                                </div>
+                            </div>
+                            <div class="card-desc">${ach.desc || 'Нет описания'}</div>
+                            
+                            <div class="badge-row">
+                                <span class="badge badge-rarity" style="background:${rarityData.color}">${rarityData.name}</span>
+                                <span class="badge badge-cat">📂 ${ach.category}</span>
+                                <span class="badge badge-type">${ach.type === 'one-time' ? 'Одноразовое' : `Повторяемое (Лвл ${ach.level || 0})`}</span>
+                            </div>
+                        </div>
+
+                        <div>
+                `;
+
+                if (ach.hasProgress) {
+                    const progPercent = Math.min(100, Math.round((ach.current / ach.max) * 100));
+                    cardHtml += `
+                        <div class="card-interactive">
+                            <div class="card-progress-text">
+                                <span>Прогресс</span>
+                                <span>${ach.current} / ${ach.max}</span>
+                            </div>
+                            <div class="progress-container" style="height:6px; margin-bottom:10px;">
+                                <div class="progress-bar" style="width: ${progPercent}%; background: ${rarityData.color}"></div>
+                            </div>
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <button class="btn btn-secondary btn-sm" style="padding:4px 10px;" onclick="adjustProgress('${ach.id}', -1)">-</button>
+                                <button class="btn btn-secondary btn-sm" style="padding:4px 10px;" onclick="adjustProgress('${ach.id}', 1)">+</button>
+                                <input type="number" class="form-control" style="padding:4px 8px; font-size:12px; text-align:center;" value="${ach.current}" onchange="manualProgressInput('${ach.id}', this.value)">
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    cardHtml += `
+                        <div class="card-interactive" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:13px; font-weight:600;">Выполнено:</span>
+                            <button class="checkbox-btn ${ach.completed ? 'checked' : ''}" onclick="toggleSimpleComplete('${ach.id}')">
+                                ✓
+                            </button>
+                        </div>
+                    `;
+                }
+
+                cardHtml += `
+                            <div class="card-actions">
+                                <div class="action-left">
+                                    <button class="btn btn-secondary btn-sm" onclick="editAchievement('${ach.id}')">✏️</button>
+                                    <button class="btn btn-secondary btn-sm btn-danger" style="color:white" onclick="deleteAchievement('${ach.id}')">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHtml);
+            });
+
+            updateDetailedStats();
+            updateCategorySelectOptions();
+        }
+
+        function renderFilters() {
+            const list = document.getElementById('filters-list');
+            const currentFilter = state.activeFilter;
+            
+            let tags = [
+                { id: 'all', label: '🌍 Все' },
+                { id: 'completed', label: '✅ Выполненные' },
+                { id: 'uncompleted', label: '⏳ Невыполненные' },
+                { id: 'one-time', label: '🎯 Одноразовые' },
+                { id: 'repeatable', label: '🔄 Повторяемые' },
+            ];
+
+            Object.keys(RARITIES).forEach(key => {
+                tags.push({ id: key, label: `✨ ${RARITIES[key].name}` });
+            });
+
+            state.categories.forEach(cat => {
+                tags.push({ id: cat, label: `📂 ${cat}` });
+            });
+
+            let html = '';
+            tags.forEach(t => {
+                const activeClass = currentFilter === t.id ? 'active' : '';
+                html += `<div class="filter-tag ${activeClass}" onclick="setFilter('${t.id}')">${t.label}</div>`;
+            });
+            list.innerHTML = html;
+        }
+
+        function setFilter(filterId) {
+            state.activeFilter = filterId;
+            render();
+        }
+
+        function syncSettingsForm() {
+            document.getElementById('setting-theme').value = state.settings.theme || 'dark';
+            document.getElementById('setting-anim').checked = state.settings.animations !== false;
+            document.getElementById('setting-sound').checked = state.settings.sound !== false;
+        }
+
+        function saveSettings() {
+            state.settings.theme = document.getElementById('setting-theme').value;
+            state.settings.animations = document.getElementById('setting-anim').checked;
+            state.settings.sound = document.getElementById('setting-sound').checked;
+            saveToStorage();
+            applyTheme(state.settings.theme);
+            applyAnimationSetting();
+            toggleModal('modal-settings', false);
+            render();
+        }
+
+        function applyTheme(theme) {
+            if(theme === 'light') document.body.classList.add('light-theme');
+            else document.body.classList.remove('light-theme');
+        }
+
+        function applyAnimationSetting() {
+            if(state.settings.animations === false) document.body.classList.add('no-animations');
+            else document.body.classList.remove('no-animations');
+        }
+
+        function clearAllData() {
+            if (confirm("Вы уверены, что хотите БЕЗВОЗВРАТНО удалить все достижения и сбросить прогресс?")) {
+                localStorage.removeItem('life_achievements_state');
+                state = {
+                    achievements: [],
+                    categories: ['Учёба', 'Спорт', 'Жизнь', 'Игры', 'Шуточные', 'Другое'],
+                    settings: { theme: 'dark', animations: true, sound: true },
+                    activeFilter: 'all'
+                };
+                applyTheme('dark'); applyAnimationSetting(); syncSettingsForm();
+                toggleModal('modal-settings', false);
+                render();
+            }
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `life_achievements_backup_${Date.now()}.json`);
+            document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed && Array.isArray(parsed.achievements)) {
+                        state = parsed; state.activeFilter = 'all';
+                        saveToStorage(); applyTheme(state.settings.theme || 'dark');
+                        applyAnimationSetting(); syncSettingsForm(); render();
+                        alert("Данные успешно импортированы!"); toggleModal('modal-settings', false);
+                    } else { alert("Некорректный формат файла."); }
+                } catch (err) { alert("Ошибка при чтении файла."); }
+            };
+            reader.readAsText(file);
+        }
+
+        function updateDetailedStats() {
+            const content = document.getElementById('detailed-stats-content');
+            if(!content) return;
+            
+            let total = state.achievements.length;
+            let oneTimeCount = state.achievements.filter(a => a.type === 'one-time').length;
+            let repeatableCount = state.achievements.filter(a => a.type === 'repeatable').length;
+            let completedOneTime = state.achievements.filter(a => a.type === 'one-time' && a.completed).length;
+            let activeRepeatable = state.achievements.filter(a => a.type === 'repeatable' && a.level > 0).length;
+            let completedTotal = completedOneTime + activeRepeatable;
+            let uncompletedTotal = total - completedTotal;
+
+            let maxRarityWeight = -1; let highestRarityName = "Нет";
+            const weight = { common:0, uncommon:1, rare:2, epic:3, legendary:4, mythic:5 };
+            let topLeveledAchName = "Нет"; let maxLevel = 0;
+            let calc = calculateStats();
+
+            state.achievements.forEach(a => {
+                const isAchDone = a.completed || (a.type === 'repeatable' && a.level > 0);
+                if (isAchDone && weight[a.rarity] > maxRarityWeight) {
+                    maxRarityWeight = weight[a.rarity]; highestRarityName = RARITIES[a.rarity].name;
+                }
+                if (a.type === 'repeatable' && (a.level || 0) > maxLevel) {
+                    maxLevel = a.level; topLeveledAchName = `${a.title} (Ур. ${a.level})`;
+                }
+            });
+
+            content.innerHTML = `
+                <div style="display:flex; justify-content:space-between;"><span>Всего достижений:</span> <b>${total}</b></div>
+                <div style="display:flex; justify-content:space-between;"><span>Выполнено:</span> <span style="color:var(--rarity-uncommon)"><b>${completedTotal}</b></span></div>
+                <div style="display:flex; justify-content:space-between;"><span>Осталось выполнить:</span> <span style="color:var(--text-muted)"><b>${uncompletedTotal}</b></span></div>
+                <div style="display:flex; justify-content:space-between;"><span>Заработано очков (AP):</span> <span style="color:var(--accent)"><b>${calc.totalAP} AP</b></span></div>
+                <div style="display:flex; justify-content:space-between;"><span>Текущий ранг:</span> <b>${calc.medal}</b></div>
+                <div style="display:flex; justify-content:space-between;"><span>Одноразовых карточек:</span> <b>${oneTimeCount}</b></div>
+                <div style="display:flex; justify-content:space-between;"><span>Повторяемых карточек:</span> <b>${repeatableCount}</b></div>
+                <div style="display:flex; justify-content:space-between;"><span>Высшая открытая редкость:</span> <b>${highestRarityName}</b></div>
+                <div style="display:flex; justify-content:space-between;"><span>Самое прокачанное:</span> <b>${maxLevel > 0 ? topLeveledAchName : 'Нет'}</b></div>
+            `;
+        }
+    </script>
+</body>
+</html>
