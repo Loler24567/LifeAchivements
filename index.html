@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LifeAchievements</title>
     <style>
         :root {
@@ -54,11 +54,11 @@
             background-color: var(--bg-main);
             color: var(--text-main);
             transition: background-color var(--anim-speed), color var(--anim-speed);
-            padding-bottom: 40px;
+            padding-bottom: env(safe-area-inset-bottom, 40px);
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 16px;
         }
@@ -89,7 +89,7 @@
         }
 
         .global-medal {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             padding: 4px 10px;
             border-radius: 20px;
@@ -97,6 +97,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            margin-top: 4px;
         }
 
         .stats-grid {
@@ -109,7 +110,7 @@
 
         .stat-box {
             background: var(--bg-main);
-            padding: 10px;
+            padding: 12px 6px;
             border-radius: 12px;
             border: 1px solid var(--border);
         }
@@ -124,12 +125,14 @@
             font-size: 11px;
             color: var(--text-muted);
             margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .progress-container {
             background: var(--bg-input);
             border-radius: 8px;
-            height: 10px;
+            height: 8px;
             overflow: hidden;
             position: relative;
         }
@@ -158,20 +161,25 @@
             font-size: 15px;
             outline: none;
         }
+        @media(max-width: 600px) {
+            .search-input { font-size: 16px; } /* Предотвращает зум на мобилках */
+        }
 
         .btn {
             background: var(--accent);
             color: white;
             border: none;
-            padding: 12px 16px;
+            padding: 12px 18px;
             border-radius: 12px;
             font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             transition: background var(--anim-speed);
+            white-space: nowrap;
         }
 
         .btn:hover { background: var(--accent-hover); }
@@ -180,24 +188,31 @@
         .btn-danger { background: var(--rarity-mythic); }
         .btn-danger:hover { background: #b91c1c; }
 
-        /* Filters */
+        /* Filters Mobile Carousel & Desktop Flex */
         .filters-container {
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            padding-bottom: 12px;
+            padding-bottom: 10px;
             margin-bottom: 20px;
-            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
         }
-        .filters-container::-webkit-scrollbar { display: none; }
+        @media(min-width: 768px) {
+            .filters-container {
+                flex-wrap: wrap;
+                overflow-x: visible;
+                padding-bottom: 0;
+            }
+        }
 
         .filter-tag {
             background: var(--bg-card);
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 6px 14px;
+            padding: 8px 14px;
             border-radius: 20px;
             font-size: 13px;
+            font-weight: 500;
             white-space: nowrap;
             cursor: pointer;
             transition: all var(--anim-speed);
@@ -209,15 +224,18 @@
             border-color: var(--accent);
         }
 
-        /* Achievements Grid */
+        /* Achievements Grid (Responsive) */
         .achievements-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 16px;
         }
 
-        @media(min-width: 640px) {
-            .achievements-grid { grid-template-columns: 1fr 1fr; }
+        @media(min-width: 600px) {
+            .achievements-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media(min-width: 900px) {
+            .achievements-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
         .card {
@@ -231,12 +249,11 @@
             position: relative;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             transition: transform 0.2s;
-            overflow: hidden;
         }
 
         .card.completed {
             border-left: 4px solid var(--rarity-uncommon);
-            opacity: 0.85;
+            opacity: 0.9;
         }
 
         /* Image Display styles */
@@ -261,14 +278,14 @@
 
         .card-image-placeholder {
             font-size: 40px;
-            opacity: 0.3;
+            opacity: 0.4;
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             gap: 8px;
         }
 
@@ -276,27 +293,29 @@
             font-size: 17px;
             font-weight: 700;
             word-break: break-word;
+            line-height: 1.3;
         }
 
         .card-desc {
             font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             flex-grow: 1;
             word-break: break-word;
+            line-height: 1.4;
         }
 
         .badge-row {
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .badge {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
-            padding: 3px 8px;
+            padding: 3px 6px;
             border-radius: 6px;
             text-transform: uppercase;
         }
@@ -307,9 +326,9 @@
 
         .card-interactive {
             background: var(--bg-main);
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 14px;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 12px;
         }
 
         .card-progress-text {
@@ -320,29 +339,55 @@
             margin-bottom: 6px;
         }
 
-        .card-actions {
-            display: flex;
+        .card-interactive-controls {
+            display: flex; 
+            gap: 8px; 
+            align-items: center; 
             justify-content: space-between;
-            align-items: center;
-            gap: 8px;
         }
 
-        .action-left { display: flex; gap: 6px; }
-        .btn-sm { padding: 6px 10px; font-size: 12px; border-radius: 8px; }
+        /* Адаптивные кнопки интерактива */
+        .interactive-btn {
+            padding: 4px 12px; 
+            font-size: 14px;
+            font-weight: bold;
+        }
+        @media(max-width: 600px) {
+            .interactive-btn {
+                min-width: 44px;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-left { display: flex; gap: 6px; width: 100%; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
+        @media(max-width: 600px) {
+            .btn-sm { min-height: 44px; }
+        }
 
         .checkbox-btn {
             background: var(--bg-input);
             border: 2px solid var(--border);
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             color: transparent;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 15px;
             transition: all var(--anim-speed);
         }
         .checkbox-btn.checked {
@@ -350,61 +395,83 @@
             border-color: var(--rarity-uncommon);
             color: white;
         }
+        @media(max-width: 600px) {
+            .checkbox-btn { width: 44px; height: 44px; font-size: 18px; }
+        }
 
-        /* Modals */
+        /* Smart Responsive Modals */
         .modal-overlay {
             position: fixed;
             top:0; left:0; right:0; bottom:0;
             background: rgba(0,0,0,0.6);
             backdrop-filter: blur(4px);
             display: none;
-            align-items: center;
+            align-items: flex-end; /* Шторка снизу на мобилках */
             justify-content: center;
             z-index: 100;
-            padding: 16px;
         }
 
         .modal {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 20px;
+            border-radius: 20px 20px 0 0;
             width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
+            max-height: 85vh;
             overflow-y: auto;
-            padding: 24px;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+            padding: 20px 16px env(safe-area-inset-bottom, 24px) 16px;
+            box-shadow: 0 -10px 25px -5px rgba(0,0,0,0.3);
             position: relative;
+        }
+
+        /* Переключение модалки в классический вид на ПК */
+        @media(min-width: 600px) {
+            .modal-overlay { 
+                align-items: center; 
+                padding: 16px; 
+            }
+            .modal {
+                border-radius: 20px;
+                max-width: 500px;
+                max-height: 90vh;
+                padding: 24px;
+                box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+            }
         }
 
         .modal-close-corner {
             position: absolute;
             top: 16px;
             right: 16px;
-            background: none;
+            background: var(--bg-input);
             border: none;
             color: var(--text-muted);
-            font-size: 20px;
+            font-size: 16px;
             cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 20px;
-            padding-right: 24px;
+            margin-bottom: 16px;
+            padding-right: 32px;
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .form-group label {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--text-muted);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .form-control {
@@ -412,29 +479,41 @@
             background: var(--bg-input);
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 10px 14px;
+            padding: 10px 12px;
             border-radius: 10px;
             font-size: 15px;
             outline: none;
+        }
+        @media(max-width: 600px) {
+            .form-control { font-size: 16px; padding: 12px; }
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
 
         .modal-footer {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
-            margin-top: 24px;
+            margin-top: 20px;
+        }
+        @media(max-width: 600px) {
+            .modal-footer-vertical {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .modal-footer-vertical .btn {
+                width: 100%;
+            }
         }
 
         /* Preview Image Area */
         .image-preview-box {
             width: 100%;
-            height: 120px;
+            height: 100px;
             background: var(--bg-main);
             border: 1px dashed var(--border);
             border-radius: 10px;
@@ -454,20 +533,20 @@
         #celebration-overlay {
             position: fixed;
             top:0; left:0; right:0; bottom:0;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             z-index: 1000;
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 20px;
+            padding: 16px;
         }
 
         .medal-anim {
-            font-size: 80px;
+            font-size: 70px;
             animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         @keyframes popIn {
@@ -477,8 +556,8 @@
 
         .confetti-particle {
             position: absolute;
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             animation: fall 3s linear infinite;
         }
@@ -488,7 +567,6 @@
             100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
         }
 
-        /* Utility classes */
         .d-none { display: none !important; }
     </style>
 </head>
@@ -562,7 +640,6 @@
                     <textarea id="form-desc" class="form-control" rows="2" placeholder="Детали достижения..."></textarea>
                 </div>
 
-                <!-- NEW: Image Loader Field -->
                 <div class="form-group">
                     <label>Изображение (по желанию)</label>
                     <input type="file" id="form-image-input" class="form-control" accept="image/*" onchange="previewImage(event)">
@@ -669,7 +746,7 @@
                 </div>
             </div>
 
-            <div class="modal-footer" style="justify-content: space-between;">
+            <div class="modal-footer modal-footer-vertical" style="justify-content: space-between;">
                 <button class="btn btn-danger btn-sm" onclick="clearAllData()">⚠️ Сбросить всё</button>
                 <button class="btn btn-secondary" onclick="saveSettings()">Закрыть</button>
             </div>
@@ -685,7 +762,7 @@
                 <!-- Filled dynamically -->
             </div>
             <div class="modal-footer">
-                <button class="btn" onclick="toggleModal('modal-stats', false)">Отлично</button>
+                <button class="btn" style="width: 100%" onclick="toggleModal('modal-stats', false)">Отлично</button>
             </div>
         </div>
     </div>
@@ -719,7 +796,6 @@
             activeFilter: 'all'
         };
 
-        // Переменная для временного хранения base64 загруженной картинки
         let currentUploadedImageBase64 = '';
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -749,36 +825,28 @@
             }
         }
 
-        // Обработка загрузки и превью картинки
         function previewImage(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                // Чтобы не перегружать LocalStorage, сжимаем картинку через Canvas
                 const img = new Image();
                 img.src = e.target.result;
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
                     
-                    // Максимальное разрешение для карточки (ширина 400px вполне достаточно)
                     const maxW = 400;
                     const scale = maxW / img.width;
                     canvas.width = maxW;
                     canvas.height = img.height * scale;
                     
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    
-                    // Переводим в сжатый base64 jpeg string
                     currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                    
-                    // Показываем превью в форме
                     document.getElementById('form-image-preview').innerHTML = `<img src="${currentUploadedImageBase64}">`;
                 }
             };
-            // ОШИБКА ИСПРАВЛЕНА: удалена конфликтующая строка readAsText
             reader.readAsDataURL(file);
         }
 
@@ -888,7 +956,6 @@
                     ach.current = current;
                     ach.max = max;
                     ach.completed = completed;
-                    // Если картинка была загружена заново, обновляем её, иначе оставляем старую
                     if(currentUploadedImageBase64) ach.image = currentUploadedImageBase64;
                     
                     if (completed && !wasCompleted) triggerCelebration(ach);
@@ -926,7 +993,6 @@
             document.getElementById('form-title').value = ach.title;
             document.getElementById('form-desc').value = ach.desc;
             
-            // Восстановление картинки при редактировании
             currentUploadedImageBase64 = ach.image || '';
             if(ach.image) {
                 document.getElementById('form-image-preview').innerHTML = `<img src="${ach.image}">`;
@@ -1055,7 +1121,7 @@
             if (!state.settings.animations) return;
             const container = document.getElementById('celebration-overlay');
             const colors = ['#f43f5e', '#3b82f6', '#eab308', '#22c55e', '#a855f7', '#f97316'];
-            for (let i = 0; i < 60; i++) {
+            for (let i = 0; i < 50; i++) {
                 const p = document.createElement('div');
                 p.classList.add('confetti-particle');
                 p.style.left = Math.random() * 100 + 'vw';
@@ -1104,7 +1170,6 @@
                 const rarityData = RARITIES[ach.rarity];
                 const isDone = ach.completed || (ach.type === 'repeatable' && ach.level > 0);
                 
-                // Блок картинки: отображает картинку или красивую заглушку-иконку редкости
                 let imgBlockHtml = '';
                 if(ach.image) {
                     imgBlockHtml = `<div class="card-image-wrap"><img src="${ach.image}" alt=""></div>`;
@@ -1145,10 +1210,10 @@
                             <div class="progress-container" style="height:6px; margin-bottom:10px;">
                                 <div class="progress-bar" style="width: ${progPercent}%; background: ${rarityData.color}"></div>
                             </div>
-                            <div style="display:flex; gap:6px; align-items:center;">
-                                <button class="btn btn-secondary btn-sm" style="padding:4px 10px;" onclick="adjustProgress('${ach.id}', -1)">-</button>
-                                <button class="btn btn-secondary btn-sm" style="padding:4px 10px;" onclick="adjustProgress('${ach.id}', 1)">+</button>
-                                <input type="number" class="form-control" style="padding:4px 8px; font-size:12px; text-align:center;" value="${ach.current}" onchange="manualProgressInput('${ach.id}', this.value)">
+                            <div class="card-interactive-controls">
+                                <button class="btn btn-secondary interactive-btn" onclick="adjustProgress('${ach.id}', -1)">-</button>
+                                <input type="number" class="form-control" style="padding:4px 8px; font-size:13px; text-align:center; max-width:70px;" value="${ach.current}" onchange="manualProgressInput('${ach.id}', this.value)">
+                                <button class="btn btn-secondary interactive-btn" onclick="adjustProgress('${ach.id}', 1)">+</button>
                             </div>
                         </div>
                     `;
@@ -1166,8 +1231,8 @@
                 cardHtml += `
                             <div class="card-actions">
                                 <div class="action-left">
-                                    <button class="btn btn-secondary btn-sm" onclick="editAchievement('${ach.id}')">✏️</button>
-                                    <button class="btn btn-secondary btn-sm btn-danger" style="color:white" onclick="deleteAchievement('${ach.id}')">🗑️</button>
+                                    <button class="btn btn-secondary btn-sm" style="flex:1;" onclick="editAchievement('${ach.id}')">✏️ Редактировать</button>
+                                    <button class="btn btn-secondary btn-sm btn-danger" style="color:white; padding: 6px 12px;" onclick="deleteAchievement('${ach.id}')">🗑️</button>
                                 </div>
                             </div>
                         </div>
