@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -14,15 +14,12 @@
             --accent: #6366f1;
             --accent-hover: #4f46e5;
             --border: #334155;
-            
-            /* Rarity Colors */
             --rarity-common: #94a3b8;
             --rarity-uncommon: #22c55e;
             --rarity-rare: #3b82f6;
             --rarity-epic: #a855f7;
             --rarity-legendary: #f97316;
             --rarity-mythic: #ef4444;
-            
             --anim-speed: 0.3s;
         }
 
@@ -37,551 +34,123 @@
             --border: #e2e8f0;
         }
 
-        .no-animations * {
-            transition: none !important;
-            animation: none !important;
-        }
+        .no-animations * { transition: none !important; animation: none !important; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-main); color: var(--text-main); transition: background-color var(--anim-speed), color var(--anim-speed); padding-bottom: 40px; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 16px; }
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            transition: background-color var(--anim-speed), color var(--anim-speed);
-            padding-bottom: env(safe-area-inset-bottom, 40px);
-        }
+        header { background: var(--bg-card); padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 20px; border: 1px solid var(--border); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .header-title h1 { font-size: 24px; font-weight: 800; background: linear-gradient(to right, var(--accent), #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .global-medal { font-size: 13px; font-weight: bold; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.1); display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; text-align: center; }
+        .stat-box { background: var(--bg-main); padding: 12px 6px; border-radius: 12px; border: 1px solid var(--border); }
+        .stat-val { font-size: 18px; font-weight: 700; color: var(--accent); }
+        .stat-lbl { font-size: 11px; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .progress-container { background: var(--bg-input); border-radius: 8px; height: 8px; overflow: hidden; position: relative; }
+        .progress-bar { background: linear-gradient(to right, var(--accent), #22c55e); height: 100%; width: 0%; transition: width var(--anim-speed) ease; }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 16px;
-        }
+        /* Section Titles */
+        .section-title { font-size: 18px; font-weight: 700; margin: 24px 0 12px 0; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Header Styles */
-        header {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-        }
+        /* Daily Quests Styles */
+        .daily-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 12px; }
+        .daily-item { background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .daily-info { flex: 1; }
+        .daily-name { font-size: 15px; font-weight: 700; }
+        .daily-schedule-text { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .streak-badge { background: rgba(249, 115, 22, 0.15); color: #f97316; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; }
+        .daily-actions { display: flex; align-items: center; gap: 10px; }
 
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
+        .controls-row { display: flex; gap: 10px; margin-bottom: 20px; }
+        .search-input { flex: 1; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 12px 16px; border-radius: 12px; font-size: 15px; outline: none; }
+        @media(max-width: 600px) { .search-input { font-size: 16px; } }
 
-        .header-title h1 {
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(to right, var(--accent), #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .global-medal {
-            font-size: 13px;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.1);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 4px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-
-        .stat-box {
-            background: var(--bg-main);
-            padding: 12px 6px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-
-        .stat-val {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .stat-lbl {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 2px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .progress-container {
-            background: var(--bg-input);
-            border-radius: 8px;
-            height: 8px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .progress-bar {
-            background: linear-gradient(to right, var(--accent), #22c55e);
-            height: 100%;
-            width: 0%;
-            transition: width var(--anim-speed) ease;
-        }
-
-        /* Controls Section */
-        .controls-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .search-input {
-            flex: 1;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 15px;
-            outline: none;
-        }
-        @media(max-width: 600px) {
-            .search-input { font-size: 16px; } /* Предотвращает зум на мобилках */
-        }
-
-        .btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 18px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: background var(--anim-speed);
-            white-space: nowrap;
-        }
-
+        .btn { background: var(--accent); color: white; border: none; padding: 12px 18px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: background var(--anim-speed); white-space: nowrap; }
         .btn:hover { background: var(--accent-hover); }
         .btn-secondary { background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); }
         .btn-secondary:hover { background: var(--bg-input); }
-        .btn-danger { background: var(--rarity-mythic); }
+        .btn-danger { background: var(--rarity-mythic); color: white; }
         .btn-danger:hover { background: #b91c1c; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
 
-        /* Filters Mobile Carousel & Desktop Flex */
-        .filters-container {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            -webkit-overflow-scrolling: touch;
-        }
-        @media(min-width: 768px) {
-            .filters-container {
-                flex-wrap: wrap;
-                overflow-x: visible;
-                padding-bottom: 0;
-            }
-        }
+        .filters-container { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; -webkit-overflow-scrolling: touch; }
+        @media(min-width: 768px) { .filters-container { flex-wrap: wrap; overflow-x: visible; padding-bottom: 0; } }
+        .filter-tag { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: all var(--anim-speed); }
+        .filter-tag.active { background: var(--accent); color: white; border-color: var(--accent); }
 
-        .filter-tag {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all var(--anim-speed);
-        }
+        .achievements-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        @media(min-width: 600px) { .achievements-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media(min-width: 900px) { .achievements-grid { grid-template-columns: repeat(3, 1fr); } }
 
-        .filter-tag.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        /* Achievements Grid (Responsive) */
-        .achievements-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-
-        @media(min-width: 600px) {
-            .achievements-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media(min-width: 900px) {
-            .achievements-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s;
-        }
-
-        .card.completed {
-            border-left: 4px solid var(--rarity-uncommon);
-            opacity: 0.9;
-        }
-
-        /* Image Display styles */
-        .card-image-wrap {
-            width: 100%;
-            height: 140px;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 12px;
-            background: var(--bg-main);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--border);
-        }
-
-        .card-image-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .card-image-placeholder {
-            font-size: 40px;
-            opacity: 0.4;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 6px;
-            gap: 8px;
-        }
-
-        .card-title {
-            font-size: 17px;
-            font-weight: 700;
-            word-break: break-word;
-            line-height: 1.3;
-        }
-
-        .card-desc {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            flex-grow: 1;
-            word-break: break-word;
-            line-height: 1.4;
-        }
-
-        .badge-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 12px;
-        }
-
-        .badge {
-            font-size: 10px;
-            font-weight: 600;
-            padding: 3px 6px;
-            border-radius: 6px;
-            text-transform: uppercase;
-        }
-
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.2s; overflow: hidden; }
+        .card.completed { border-top: 4px solid var(--rarity-uncommon); opacity: 0.9; }
+        .card-image-wrap { width: 100%; height: 160px; overflow: hidden; background: var(--bg-main); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border); }
+        .card-image-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        .card-image-placeholder { font-size: 48px; opacity: 0.5; }
+        .card-content-padding { padding: 16px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 8px; }
+        .card-title { font-size: 17px; font-weight: 700; word-break: break-word; line-height: 1.3; }
+        .card-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; flex-grow: 1; word-break: break-word; line-height: 1.4; }
+        
+        .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .badge { font-size: 10px; font-weight: 600; padding: 3px 6px; border-radius: 6px; text-transform: uppercase; }
         .badge-rarity { color: #fff; }
         .badge-cat { background: var(--bg-input); color: var(--text-muted); }
         .badge-type { background: rgba(99, 102, 241, 0.15); color: var(--accent); }
 
-        .card-interactive {
-            background: var(--bg-main);
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-        }
+        .card-interactive { background: var(--bg-main); padding: 12px; border-radius: 12px; margin-bottom: 12px; }
+        .card-progress-text { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+        .card-interactive-controls { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+        .interactive-btn { padding: 4px 12px; font-size: 14px; font-weight: bold; }
+        @media(max-width: 600px) { .interactive-btn { min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; } }
 
-        .card-progress-text {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
+        .checkbox-btn { background: var(--bg-input); border: 2px solid var(--border); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: transparent; font-weight: bold; font-size: 15px; transition: all var(--anim-speed); }
+        .checkbox-btn.checked { background: var(--rarity-uncommon); border-color: var(--rarity-uncommon); color: white; }
+        @media(max-width: 600px) { .checkbox-btn { width: 44px; height: 44px; font-size: 18px; } }
 
-        .card-interactive-controls {
-            display: flex; 
-            gap: 8px; 
-            align-items: center; 
-            justify-content: space-between;
-        }
+        .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; align-items: flex-end; justify-content: center; z-index: 100; }
+        .modal { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px 20px 0 0; width: 100%; max-height: 85vh; overflow-y: auto; padding: 20px 16px env(safe-area-inset-bottom, 24px) 16px; box-shadow: 0 -10px 25px -5px rgba(0,0,0,0.3); position: relative; }
+        @media(min-width: 600px) { .modal-overlay { align-items: center; padding: 16px; } .modal { border-radius: 20px; max-width: 500px; max-height: 90vh; padding: 24px; } }
+        .modal-close-corner { position: absolute; top: 16px; right: 16px; background: var(--bg-input); border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; padding-right: 32px; }
+        
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
+        .form-control { width: 100%; background: var(--bg-input); border: 1px solid var(--border); color: var(--text-main); padding: 10px 12px; border-radius: 10px; font-size: 15px; outline: none; }
+        @media(max-width: 600px) { .form-control { font-size: 16px; padding: 12px; } }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-        /* Адаптивные кнопки интерактива */
-        .interactive-btn {
-            padding: 4px 12px; 
-            font-size: 14px;
-            font-weight: bold;
-        }
-        @media(max-width: 600px) {
-            .interactive-btn {
-                min-width: 44px;
-                min-height: 44px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-        }
+        .days-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 4px; }
+        .day-label { background: var(--bg-input); border: 1px solid var(--border); border-radius: 6px; padding: 6px; text-align: center; font-size: 12px; cursor: pointer; display: block; }
+        .day-label input { display: none; }
+        .day-label:has(input:checked) { background: var(--accent); color: white; border-color: var(--accent); }
 
-        .card-actions {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 6px;
-        }
+        .image-preview-box { width: 100%; height: 100px; background: var(--bg-main); border: 1px dashed var(--border); border-radius: 10px; margin-top: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .image-preview-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        .action-left { display: flex; gap: 6px; width: 100%; }
-        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
-        @media(max-width: 600px) {
-            .btn-sm { min-height: 44px; }
-        }
-
-        .checkbox-btn {
-            background: var(--bg-input);
-            border: 2px solid var(--border);
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: transparent;
-            font-weight: bold;
-            font-size: 15px;
-            transition: all var(--anim-speed);
-        }
-        .checkbox-btn.checked {
-            background: var(--rarity-uncommon);
-            border-color: var(--rarity-uncommon);
-            color: white;
-        }
-        @media(max-width: 600px) {
-            .checkbox-btn { width: 44px; height: 44px; font-size: 18px; }
-        }
-
-        /* Smart Responsive Modals */
-        .modal-overlay {
-            position: fixed;
-            top:0; left:0; right:0; bottom:0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: flex-end; /* Шторка снизу на мобилках */
-            justify-content: center;
-            z-index: 100;
-        }
-
-        .modal {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px 20px 0 0;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 20px 16px env(safe-area-inset-bottom, 24px) 16px;
-            box-shadow: 0 -10px 25px -5px rgba(0,0,0,0.3);
-            position: relative;
-        }
-
-        /* Переключение модалки в классический вид на ПК */
-        @media(min-width: 600px) {
-            .modal-overlay { 
-                align-items: center; 
-                padding: 16px; 
-            }
-            .modal {
-                border-radius: 20px;
-                max-width: 500px;
-                max-height: 90vh;
-                padding: 24px;
-                box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
-            }
-        }
-
-        .modal-close-corner {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: var(--bg-input);
-            border: none;
-            color: var(--text-muted);
-            font-size: 16px;
-            cursor: pointer;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            padding-right: 32px;
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-
-        .form-control {
-            width: 100%;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 10px 12px;
-            border-radius: 10px;
-            font-size: 15px;
-            outline: none;
-        }
-        @media(max-width: 600px) {
-            .form-control { font-size: 16px; padding: 12px; }
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        @media(max-width: 600px) {
-            .modal-footer-vertical {
-                flex-direction: column;
-                gap: 8px;
-            }
-            .modal-footer-vertical .btn {
-                width: 100%;
-            }
-        }
-
-        /* Preview Image Area */
-        .image-preview-box {
-            width: 100%;
-            height: 100px;
-            background: var(--bg-main);
-            border: 1px dashed var(--border);
-            border-radius: 10px;
-            margin-top: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .image-preview-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Celebration Animation Overlay */
-        #celebration-overlay {
-            position: fixed;
-            top:0; left:0; right:0; bottom:0;
-            background: rgba(15, 23, 42, 0.95);
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 16px;
-        }
-
-        .medal-anim {
-            font-size: 70px;
-            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            margin-bottom: 16px;
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-
-        .confetti-particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            animation: fall 3s linear infinite;
-        }
-
-        @keyframes fall {
-            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
-        }
-
+        #celebration-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(15, 23, 42, 0.95); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 16px; }
+        .medal-anim { font-size: 70px; animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; margin-bottom: 16px; }
+        @keyframes popIn { 0% { transform: scale(0) rotate(-45deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+        .confetti-particle { position: absolute; width: 6px; height: 6px; border-radius: 50%; animation: fall 3s linear infinite; }
+        @keyframes fall { 0% { transform: translateY(-50px) rotate(0deg); opacity: 1; } 100% { transform: translateY(105vh) rotate(360deg); opacity: 0; } }
         .d-none { display: none !important; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Header Dashboard -->
+        <!-- Dashboard Header -->
         <header>
             <div class="header-top">
                 <div class="header-title">
                     <h1>LifeAchievements</h1>
-                    <div class="global-medal" id="global-medal">🥈 Серебро</div>
+                    <div class="global-medal" id="global-medal">🥈 ...</div>
                 </div>
                 <div style="display:flex; gap:8px;">
-                    <button class="btn btn-secondary btn-sm" id="btn-stats" onclick="toggleModal('modal-stats', true)">📊 Статы</button>
+                    <button class="btn btn-secondary btn-sm" id="btn-stats" onclick="toggleModal('modal-stats', true)" data-i18n="btn_stats">📊 Stats</button>
                     <button class="btn btn-secondary btn-sm" onclick="toggleModal('modal-settings', true)">⚙️</button>
                 </div>
             </div>
@@ -589,121 +158,161 @@
             <div class="stats-grid">
                 <div class="stat-box">
                     <div class="stat-val" id="stat-total-ap">0</div>
-                    <div class="stat-lbl">Всего AP</div>
+                    <div class="stat-lbl" data-i18n="lbl_total_ap">Total AP</div>
                 </div>
                 <div class="stat-box">
                     <div class="stat-val" id="stat-count-done">0/0</div>
-                    <div class="stat-lbl">Выполнено</div>
+                    <div class="stat-lbl" data-i18n="lbl_completed">Completed</div>
                 </div>
                 <div class="stat-box">
                     <div class="stat-val" id="stat-percent">0%</div>
-                    <div class="stat-lbl">Прогресс</div>
+                    <div class="stat-lbl" data-i18n="lbl_progress">Progress</div>
                 </div>
             </div>
-
             <div class="progress-container">
                 <div class="progress-bar" id="global-progress-bar"></div>
             </div>
         </header>
 
-        <!-- Search and Action Area -->
+        <!-- DAILY QUESTS SECTION (Пункт 2) -->
+        <div class="section-title">
+            <span data-i18n="title_dailies">📅 Daily Quests</span>
+            <button class="btn btn-secondary btn-sm" onclick="openDailyModal()" data-i18n="btn_add_daily">➕ Add Quest</button>
+        </div>
+        <div class="daily-container" id="daily-list-container"></div>
+
+        <!-- MAIN ACHIEVEMENTS CONTROLS -->
+        <div class="section-title" data-i18n="title_achievements">🏆 Achievements</div>
         <div class="controls-row">
-            <input type="text" class="search-input" id="search-bar" placeholder="Поиск по названию и описанию..." oninput="render()">
-            <button class="btn" onclick="openCreateModal()">➕ Создать</button>
+            <input type="text" class="search-input" id="search-bar" placeholder="Search..." oninput="render()">
+            <button class="btn" onclick="openCreateModal()" id="btn-create-main">➕ Create</button>
         </div>
 
-        <!-- Filters Grid Carousel -->
-        <div class="filters-container" id="filters-list">
-            <!-- Dynamic Category and Status filter tags go here -->
-        </div>
-
-        <!-- Achievements Grid -->
-        <main class="achievements-grid" id="achievements-container">
-            <!-- Dynamic cards go here -->
-        </main>
+        <div class="filters-container" id="filters-list"></div>
+        <main class="achievements-grid" id="achievements-container"></main>
     </div>
 
-    <!-- CREATE / EDIT MODAL -->
+    <!-- MAIN ACHIEVEMENT MODAL -->
     <div class="modal-overlay" id="modal-achievement" onclick="handleOverlayClick(event, 'modal-achievement')">
         <div class="modal">
             <button type="button" class="modal-close-corner" onclick="toggleModal('modal-achievement', false)">✕</button>
-            <div class="modal-title" id="modal-ach-title">Создать достижение</div>
+            <div class="modal-title" id="modal-ach-title">Create Achievement</div>
             <form id="ach-form" onsubmit="saveAchievement(event)">
                 <input type="hidden" id="form-id">
                 
                 <div class="form-group">
-                    <label>Название</label>
-                    <input type="text" id="form-title" class="form-control" required placeholder="Напр: Прочесть книгу">
+                    <label data-i18n="form_title">Title</label>
+                    <input type="text" id="form-title" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label>Описание</label>
-                    <textarea id="form-desc" class="form-control" rows="2" placeholder="Детали достижения..."></textarea>
+                    <label data-i18n="form_desc">Description</label>
+                    <textarea id="form-desc" class="form-control" rows="2"></textarea>
                 </div>
-
                 <div class="form-group">
-                    <label>Изображение (по желанию)</label>
+                    <label data-i18n="form_img">Image (Optional)</label>
                     <input type="file" id="form-image-input" class="form-control" accept="image/*" onchange="previewImage(event)">
                     <div class="image-preview-box" id="form-image-preview">
-                        <span style="font-size:13px; color:var(--text-muted);">Нет изображения</span>
+                        <span style="font-size:13px; color:var(--text-muted);" id="lbl-no-img">No Image</span>
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Категория</label>
-                        <select id="form-cat" class="form-control" onchange="checkCustomCategory(this.value)">
-                            <!-- Будет заполнено динамически -->
-                        </select>
+                        <label data-i18n="form_cat">Category</label>
+                        <select id="form-cat" class="form-control" onchange="checkCustomCategory(this.value)"></select>
                     </div>
                     <div class="form-group d-none" id="custom-cat-wrapper">
-                        <label>Название категории</label>
-                        <input type="text" id="form-custom-cat" class="form-control" placeholder="Новая категория">
+                        <label data-i18n="form_custom_cat">New Category Name</label>
+                        <input type="text" id="form-custom-cat" class="form-control">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Редкость</label>
-                        <select id="form-rarity" class="form-control">
-                            <option value="common">Обычное (10 AP)</option>
-                            <option value="uncommon">Необычное (15 AP)</option>
-                            <option value="rare">Редкое (25 AP)</option>
-                            <option value="epic">Эпическое (50 AP)</option>
-                            <option value="legendary">Легендарное (100 AP)</option>
-                            <option value="mythic">Мифическое (150 AP)</option>
-                        </select>
+                        <label data-i18n="form_rarity">Rarity</label>
+                        <select id="form-rarity" class="form-control"></select>
                     </div>
                     <div class="form-group">
-                        <label>Тип</label>
-                        <select id="form-type" class="form-control">
-                            <option value="one-time">Одноразовое</option>
-                            <option value="repeatable">Повторяемое</option>
-                        </select>
+                        <label data-i18n="form_type">Type</label>
+                        <select id="form-type" class="form-control"></select>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Использовать прогресс?</label>
-                    <select id="form-has-progress" class="form-control" onchange="toggleFormProgressFields(this.value === 'yes')">
-                        <option value="no">Нет (просто галочка)</option>
-                        <option value="yes">Да (шкала с числами)</option>
-                    </select>
+                    <label data-i18n="form_use_prog">Use progressive tracking?</label>
+                    <select id="form-has-progress" class="form-control" onchange="toggleFormProgressFields(this.value === 'yes')"></select>
                 </div>
 
                 <div class="form-row d-none" id="form-progress-fields">
                     <div class="form-group">
-                        <label>Текущее значение</label>
+                        <label data-i18n="form_curr_val">Current Value</label>
                         <input type="number" id="form-current" class="form-control" value="0" min="0">
                     </div>
                     <div class="form-group">
-                        <label>Максимальное значение</label>
+                        <label data-i18n="form_max_val">Target Value</label>
                         <input type="number" id="form-max" class="form-control" value="10" min="1">
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="toggleModal('modal-achievement', false)">Отмена</button>
-                    <button type="submit" class="btn">Сохранить</button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleModal('modal-achievement', false)" data-i18n="btn_cancel">Cancel</button>
+                    <button type="submit" class="btn" data-i18n="btn_save">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DAILY QUEST MODAL -->
+    <div class="modal-overlay" id="modal-daily" onclick="handleOverlayClick(event, 'modal-daily')">
+        <div class="modal">
+            <button type="button" class="modal-close-corner" onclick="toggleModal('modal-daily', false)">✕</button>
+            <div class="modal-title" id="modal-daily-title" data-i18n="daily_modal_title">Create Quest</div>
+            <form id="daily-form" onsubmit="saveDailyQuest(event)">
+                <input type="hidden" id="daily-id">
+                
+                <div class="form-group">
+                    <label data-i18n="form_title">Title</label>
+                    <input type="text" id="daily-title" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label data-i18n="daily_schedule_type">Schedule Type</label>
+                    <select id="daily-type" class="form-control" onchange="switchDailyTypeFields(this.value)">
+                        <option value="days" data-i18n="daily_opt_days">By Days of Week</option>
+                        <option value="date" data-i18n="daily_opt_date">Specific Date / Yearly</option>
+                    </select>
+                </div>
+
+                <!-- Fields for days of week -->
+                <div class="form-group" id="daily-days-group">
+                    <label data-i18n="daily_choose_days">Select active days:</label>
+                    <div class="days-selector">
+                        <label class="day-label"><input type="checkbox" value="1"><span data-i18n="day_1">Mon</span></label>
+                        <label class="day-label"><input type="checkbox" value="2"><span data-i18n="day_2">Tue</span></label>
+                        <label class="day-label"><input type="checkbox" value="3"><span data-i18n="day_3">Wed</span></label>
+                        <label class="day-label"><input type="checkbox" value="4"><span data-i18n="day_4">Thu</span></label>
+                        <label class="day-label"><input type="checkbox" value="5"><span data-i18n="day_5">Fri</span></label>
+                        <label class="day-label"><input type="checkbox" value="6"><span data-i18n="day_6">Sat</span></label>
+                        <label class="day-label"><input type="checkbox" value="0"><span data-i18n="day_0">Sun</span></label>
+                    </div>
+                </div>
+
+                <!-- Fields for calendar date -->
+                <div class="form-row d-none" id="daily-date-group">
+                    <div class="form-group">
+                        <label data-i18n="daily_date">Select Date</label>
+                        <input type="date" id="daily-calendar-date" class="form-control">
+                    </div>
+                    <div class="form-group" style="display:flex; align-items:center; margin-top:20px; padding-left:10px;">
+                        <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer; color:var(--text-main);">
+                            <input type="checkbox" id="daily-yearly"> <span data-i18n="daily_yearly">Every year</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="toggleModal('modal-daily', false)" data-i18n="btn_cancel">Cancel</button>
+                    <button type="submit" class="btn" data-i18n="btn_save">Save</button>
                 </div>
             </form>
         </div>
@@ -713,42 +322,45 @@
     <div class="modal-overlay" id="modal-settings" onclick="handleOverlayClick(event, 'modal-settings')">
         <div class="modal">
             <button type="button" class="modal-close-corner" onclick="toggleModal('modal-settings', false)">✕</button>
-            <div class="modal-title">Настройки приложения</div>
+            <div class="modal-title" data-i18n="sett_title">App Settings</div>
             
             <div class="form-group">
-                <label>Тема оформления</label>
-                <select id="setting-theme" class="form-control" onchange="applyTheme(this.value)">
-                    <option value="dark">Тёмная</option>
-                    <option value="light">Светлая</option>
+                <label data-i18n="sett_lang">Language / Язык</label>
+                <select id="setting-lang" class="form-control" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="ru">Русский</option>
                 </select>
             </div>
-
             <div class="form-group">
-                <label>Интерфейс</label>
+                <label data-i18n="sett_theme">Theme</label>
+                <select id="setting-theme" class="form-control" onchange="applyTheme(this.value)">
+                    <option value="dark" data-i18n="theme_dark">Dark</option>
+                    <option value="light" data-i18n="theme_light">Light</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label data-i18n="sett_ui">Interface</label>
                 <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 5px;">
                     <label style="display:flex; align-items:center; gap:8px; color:var(--text-main)">
-                        <input type="checkbox" id="setting-anim" checked> Включить анимации
+                        <input type="checkbox" id="setting-anim" checked> <span data-i18n="sett_anim">Enable Animations</span>
                     </label>
                     <label style="display:flex; align-items:center; gap:8px; color:var(--text-main)">
-                        <input type="checkbox" id="setting-sound" checked> Включить звук
+                        <input type="checkbox" id="setting-sound" checked> <span data-i18n="sett_sound">Enable Sound</span>
                     </label>
                 </div>
             </div>
-
             <hr style="border-color: var(--border); margin: 20px 0;">
-
             <div class="form-group">
-                <label>Резервное копирование (JSON)</label>
+                <label data-i18n="sett_backup">Backup data (JSON)</label>
                 <div style="display:flex; gap:10px; margin-top: 8px;">
-                    <button class="btn btn-secondary btn-sm" onclick="exportData()" style="flex:1">📥 Экспорт</button>
-                    <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-file').click()" style="flex:1">📤 Импорт</button>
+                    <button class="btn btn-secondary btn-sm" onclick="exportData()" style="flex:1" data-i18n="btn_export">📥 Export</button>
+                    <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-file').click()" style="flex:1" data-i18n="btn_import">📤 Import</button>
                     <input type="file" id="import-file" class="d-none" accept=".json" onchange="importData(event)">
                 </div>
             </div>
-
-            <div class="modal-footer modal-footer-vertical" style="justify-content: space-between;">
-                <button class="btn btn-danger btn-sm" onclick="clearAllData()">⚠️ Сбросить всё</button>
-                <button class="btn btn-secondary" onclick="saveSettings()">Закрыть</button>
+            <div class="modal-footer modal-footer-vertical" style="justify-content: space-between; gap:10px;">
+                <button class="btn btn-danger btn-sm" onclick="clearAllData()" data-i18n="btn_reset">⚠️ Reset All Data</button>
+                <button class="btn btn-secondary" onclick="saveSettings()" data-i18n="btn_close">Close</button>
             </div>
         </div>
     </div>
@@ -757,42 +369,104 @@
     <div class="modal-overlay" id="modal-stats" onclick="handleOverlayClick(event, 'modal-stats')">
         <div class="modal">
             <button type="button" class="modal-close-corner" onclick="toggleModal('modal-stats', false)">✕</button>
-            <div class="modal-title">Подробная статистика</div>
-            <div id="detailed-stats-content" style="display:flex; flex-direction:column; gap:12px;">
-                <!-- Filled dynamically -->
-            </div>
+            <div class="modal-title" data-i18n="stats_detailed">Detailed Statistics</div>
+            <div id="detailed-stats-content" style="display:flex; flex-direction:column; gap:12px;"></div>
             <div class="modal-footer">
-                <button class="btn" style="width: 100%" onclick="toggleModal('modal-stats', false)">Отлично</button>
+                <button class="btn" style="width: 100%" onclick="toggleModal('modal-stats', false)" data-i18n="btn_great">Great</button>
             </div>
         </div>
     </div>
 
-    <!-- CELEBRATION SCREEN OVERLAY -->
+    <!-- CELEBRATION OVERLAY -->
     <div id="celebration-overlay">
         <div class="medal-anim" id="cel-medal">🏆</div>
-        <h2 style="font-size: 28px; font-weight:800; margin-bottom:10px; color:#fff;" id="cel-title">ДОСТИЖЕНИЕ ПОЛУЧЕНО!</h2>
-        <p style="font-size: 18px; color: var(--rarity-legendary); font-weight:700; margin-bottom: 6px;" id="cel-rarity">Легендарное</p>
-        <p style="font-size: 16px; color:#e2e8f0; margin-bottom: 20px;" id="cel-ach-name">Название достижения</p>
+        <h2 style="font-size: 28px; font-weight:800; margin-bottom:10px; color:#fff;" id="cel-title_banner">ACHIEVEMENT UNLOCKED!</h2>
+        <p style="font-size: 18px; font-weight:700; margin-bottom: 6px;" id="cel-rarity">Legendary</p>
+        <p style="font-size: 16px; color:#e2e8f0; margin-bottom: 20px;" id="cel-ach-name">Name</p>
         <div style="font-size: 20px; font-weight:bold; background:rgba(255,255,255,0.2); padding:8px 20px; border-radius:30px; color:#fff;">
             + <span id="cel-ap">100</span> AP
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- BUSINESS LOGIC SCRIPT -->
     <script>
+        const TRANSLATIONS = {
+            en: {
+                btn_stats: "📊 Stats", lbl_total_ap: "Total AP", lbl_completed: "Completed", lbl_progress: "Progress",
+                search_holder: "Search by title or description...", btn_create: "➕ Create", filter_all: "🌍 All",
+                filter_done: "✅ Unlocked", filter_undone: "⏳ Locked", filter_one: "🎯 One-time", filter_rep: "🔄 Repeatable",
+                no_items: "Nothing found 🤔", txt_no_desc: "No description provided", txt_done_label: "Completed:",
+                btn_edit: "✏️ Edit", modal_create_title: "Create Achievement", modal_edit_title: "Edit Achievement",
+                form_title: "Title", form_desc: "Description", form_img: "Image (Optional)", lbl_no_img: "No Image",
+                form_cat: "Category", form_custom_cat: "New Category Name", form_rarity: "Rarity", form_type: "Type",
+                form_use_prog: "Use progressive tracking?", form_curr_val: "Current Value", form_max_val: "Target Value",
+                btn_cancel: "Cancel", btn_save: "Save", opt_no: "No (Simple check)", opt_yes: "Yes (Value scale)",
+                opt_one: "One-time", opt_rep: "Repeatable", opt_custom_cat: "+ New Category...",
+                sett_title: "App Settings", sett_lang: "Language", sett_theme: "Theme", sett_ui: "Interface",
+                sett_anim: "Enable Animations", sett_sound: "Enable Sound", sett_backup: "Backup data (JSON)",
+                btn_export: "📥 Export", btn_import: "📤 Import", btn_reset: "⚠️ Reset All Data", btn_close: "Close",
+                stats_detailed: "Detailed Statistics", btn_great: "Great", cel_banner: "ACHIEVEMENT UNLOCKED!",
+                stat_total: "Total Achievements:", stat_done: "Unlocked:", stat_left: "Locked remaining:",
+                stat_ap: "Earned Points:", stat_rank: "Current Rank:", stat_cards_one: "One-time cards:",
+                stat_cards_rep: "Repeatable cards:", stat_highest: "Highest Rarity Unlocked:", stat_most_proc: "Most Upgraded:",
+                confirm_del: "Delete this item?", confirm_reset: "Are you sure you want to PERMANENTLY delete everything?",
+                msg_imported: "Data successfully imported!", msg_bad_file: "Invalid file format.", msg_error_file: "Error reading file.",
+                title_dailies: "📅 Daily Quests", btn_add_daily: "➕ Add Quest", title_achievements: "🏆 Achievements",
+                daily_modal_title: "Create Daily Quest", daily_modal_edit: "Edit Daily Quest", daily_schedule_type: "Schedule Type",
+                daily_opt_days: "By Days of Week", daily_opt_date: "Specific Date / Yearly", daily_choose_days: "Select active days:",
+                daily_date: "Select Date", daily_yearly: "Every year", theme_dark: "Dark", theme_light: "Light",
+                day_1: "Mon", day_2: "Tue", day_3: "Wed", day_4: "Thu", day_5: "Fri", day_6: "Sat", day_0: "Sun",
+                streak_text: "Streak:", schedule_yearly: "Every year on", schedule_date: "Date:", schedule_days: "Days:", schedule_today: "Today!", schedule_inactive: "Not active today",
+                rarities: { common: 'Common', uncommon: 'Uncommon', rare: 'Rare', epic: 'Epic', legendary: 'Legendary', mythic: 'Mythic' },
+                ranks: { r1: "🥚 Novice", r2: "🥉 Bronze", r3: "🥈 Silver", r4: "🥇 Gold", r5: "💎 Diamond", r6: "👑 Crown" },
+                categories: ['Studies', 'Sport', 'Life', 'Gaming', 'Humor', 'Other']
+            },
+            ru: {
+                btn_stats: "📊 Статы", lbl_total_ap: "Всего AP", lbl_completed: "Выполнено", lbl_progress: "Прогресс",
+                search_holder: "Поиск по названию и описанию...", btn_create: "➕ Создать", filter_all: "🌍 Все",
+                filter_done: "✅ Выполненные", filter_undone: "⏳ Невыполненные", filter_one: "🎯 Одноразовые", filter_rep: "🔄 Повторяемые",
+                no_items: "Ничего не найдено 🤔", txt_no_desc: "Нет описания", txt_done_label: "Выполнено:",
+                btn_edit: "✏️ Редактировать", modal_create_title: "Создать достижение", modal_edit_title: "Редактировать достижение",
+                form_title: "Название", form_desc: "Описание", form_img: "Изображение (по желанию)", lbl_no_img: "Нет изображения",
+                form_cat: "Категория", form_custom_cat: "Название категории", form_rarity: "Редкость", form_type: "Тип",
+                form_use_prog: "Использовать прогресс?", form_curr_val: "Текущее значение", form_max_val: "Максимальное значение",
+                btn_cancel: "Отмена", btn_save: "Сохранить", opt_no: "Нет (просто галочка)", opt_yes: "Да (шкала с числами)",
+                opt_one: "Одноразовое", opt_rep: "Повторяемое", opt_custom_cat: "+ Своя категория...",
+                sett_title: "Настройки приложения", sett_lang: "Язык", sett_theme: "Тема оформления", sett_ui: "Интерфейс",
+                sett_anim: "Включить анимации", sett_sound: "Включить звук", sett_backup: "Резервное копирование (JSON)",
+                btn_export: "📥 Экспорт", btn_import: "📤 Импорт", btn_reset: "⚠️ Сбросить всё", btn_close: "Закрыть",
+                stats_detailed: "Подробная статистика", btn_great: "Отлично", cel_banner: "ДОСТИЖЕНИЕ ПОЛУЧЕНО!",
+                stat_total: "Всего достижений:", stat_done: "Выполнено:", stat_left: "Осталось выполнить:",
+                stat_ap: "Заработано очков (AP):", stat_rank: "Текущий ранг:", stat_cards_one: "Одноразовых карточек:",
+                stat_cards_rep: "Повторяемых карточек:", stat_highest: "Высшая открытая редкость:", stat_most_proc: "Самое прокачанное:",
+                confirm_del: "Удалить этот элемент?", confirm_reset: "Вы уверены, что хотите БЕЗВОЗВРАТНО удалить все данные?",
+                msg_imported: "Данные успешно импортированы!", msg_bad_file: "Некорректный формат файла.", msg_error_file: "Ошибка при чтении файла.",
+                title_dailies: "📅 Ежедневные задания", btn_add_daily: "➕ Добавить квест", title_achievements: "🏆 Достижения",
+                daily_modal_title: "Создать задание", daily_modal_edit: "Редактировать задание", daily_schedule_type: "Тип расписания",
+                daily_opt_days: "По дням недели", daily_opt_date: "Конкретная дата / Ежегодно", daily_choose_days: "Выберите дни активности:",
+                daily_date: "Выберите дату", daily_yearly: "Каждый год", theme_dark: "Тёмная", theme_light: "Светлая",
+                day_1: "Пн", day_2: "Вт", day_3: "Ср", day_4: "Чт", day_5: "Пт", day_6: "Сб", day_0: "Вс",
+                streak_text: "Страйк 🔥:", schedule_yearly: "Каждый год:", schedule_date: "Дата:", schedule_days: "Дни:", schedule_today: "Сегодня!", schedule_inactive: "Неактивно сегодня",
+                rarities: { common: 'Обычное', uncommon: 'Необычное', rare: 'Редкое', epic: 'Эпическое', legendary: 'Легендарное', mythic: 'Мифическое' },
+                ranks: { r1: "🥚 Новичок", r2: "🥉 Бронза", r3: "🥈 Серебро", r4: "🥇 Золото", r5: "💎 Алмаз", r6: "👑 Корона" },
+                categories: ['Учёба', 'Спорт', 'Жизнь', 'Игры', 'Шуточные', 'Другое']
+            }
+        };
+
         const RARITIES = {
-            common: { name: 'Обычное', ap: 10, color: 'var(--rarity-common)', icon: '⚪' },
-            uncommon: { name: 'Необычное', ap: 15, color: 'var(--rarity-uncommon)', icon: '🟢' },
-            rare: { name: 'Редкое', ap: 25, color: 'var(--rarity-rare)', icon: '🔵' },
-            epic: { name: 'Эпическое', ap: 50, color: 'var(--rarity-epic)', icon: '🟣' },
-            legendary: { name: 'Легендарное', ap: 100, color: 'var(--rarity-legendary)', icon: '🟠' },
-            mythic: { name: 'Мифическое', ap: 150, color: 'var(--rarity-mythic)', icon: '🔴' }
+            common: { ap: 10, color: 'var(--rarity-common)', icon: '⚪' },
+            uncommon: { ap: 15, color: 'var(--rarity-uncommon)', icon: '🟢' },
+            rare: { ap: 25, color: 'var(--rarity-rare)', icon: '🔵' },
+            epic: { ap: 50, color: 'var(--rarity-epic)', icon: '🟣' },
+            legendary: { ap: 100, color: 'var(--rarity-legendary)', icon: '🟠' },
+            mythic: { ap: 150, color: 'var(--rarity-mythic)', icon: '🔴' }
         };
 
         let state = {
             achievements: [],
-            categories: ['Учёба', 'Спорт', 'Жизнь', 'Игры', 'Шуточные', 'Другое'],
-            settings: { theme: 'dark', animations: true, sound: true },
+            dailies: [], // Новое хранилище под квесты
+            categories: [],
+            settings: { theme: 'dark', animations: true, sound: true, lang: 'en' },
             activeFilter: 'all'
         };
 
@@ -802,6 +476,8 @@
             loadFromStorage();
             applyTheme(state.settings.theme);
             applyAnimationSetting();
+            checkAndResetDailies(); // Рассчитываем страйки на сегодня
+            translateStaticHTML();
             syncSettingsForm();
             render();
         });
@@ -815,20 +491,229 @@
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
+                    state.settings = parsed.settings || { theme: 'dark', animations: true, sound: true, lang: 'en' };
                     state.achievements = parsed.achievements || [];
-                    state.categories = parsed.categories || ['Учёба', 'Спорт', 'Жизнь', 'Игры', 'Шуточные', 'Другое'];
-                    state.settings = parsed.settings || { theme: 'dark', animations: true, sound: true };
+                    state.dailies = parsed.dailies || [];
+                    // Если категории пустые или не массивом, ставим дефолт
+                    if(parsed.categories && parsed.categories.length > 0) {
+                        state.categories = parsed.categories;
+                    } else {
+                        state.categories = [...TRANSLATIONS[state.settings.lang].categories];
+                    }
                     state.activeFilter = parsed.activeFilter || 'all';
-                } catch(e) {
-                    console.error("Ошибка загрузки данных", e);
+                } catch(e) { fallbackState(); }
+            } else { fallbackState(); }
+        }
+
+        function fallbackState() {
+            state.settings = { theme: 'dark', animations: true, sound: true, lang: 'en' };
+            state.categories = [...TRANSLATIONS.en.categories];
+            state.achievements = [];
+            state.dailies = [];
+        }
+
+        function changeLanguage(langCode) {
+            state.settings.lang = langCode;
+            // Принудительно заменяем базовые категории, чтобы они мгновенно перевелись
+            state.categories = [...TRANSLATIONS[langCode].categories];
+            saveToStorage();
+            translateStaticHTML();
+            render();
+        }
+
+        function translateStaticHTML() {
+            const lang = state.settings.lang;
+            const t = TRANSLATIONS[lang];
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) el.innerText = t[key];
+            });
+
+            document.getElementById('search-bar').placeholder = t.search_holder;
+            document.getElementById('btn-create-main').innerText = t.btn_create;
+            document.getElementById('lbl-no-img').innerText = t.lbl_no_img;
+
+            // Полное исправление селекторов создания достижения
+            document.getElementById('form-rarity').innerHTML = `
+                <option value="common">${t.rarities.common} (10 AP)</option>
+                <option value="uncommon">${t.rarities.uncommon} (15 AP)</option>
+                <option value="rare">${t.rarities.rare} (25 AP)</option>
+                <option value="epic">${t.rarities.epic} (50 AP)</option>
+                <option value="legendary">${t.rarities.legendary} (100 AP)</option>
+                <option value="mythic">${t.rarities.mythic} (150 AP)</option>
+            `;
+            document.getElementById('form-type').innerHTML = `
+                <option value="one-time">${t.opt_one}</option>
+                <option value="repeatable">${t.opt_rep}</option>
+            `;
+            document.getElementById('form-has-progress').innerHTML = `
+                <option value="no">${t.opt_no}</option>
+                <option value="yes">${t.opt_yes}</option>
+            `;
+        }
+
+        /* --- ЛОГИКА ЕЖЕДНЕВНЫХ ЗАДАНИЙ И СТРАЙКОВ --- */
+        function openDailyModal() {
+            const t = TRANSLATIONS[state.settings.lang];
+            document.getElementById('modal-daily-title').innerText = t.daily_modal_title;
+            document.getElementById('daily-form').reset();
+            document.getElementById('daily-id').value = '';
+            switchDailyTypeFields('days');
+            toggleModal('modal-daily', true);
+        }
+
+        function switchDailyTypeFields(type) {
+            if(type === 'days') {
+                document.getElementById('daily-days-group').classList.remove('d-none');
+                document.getElementById('daily-date-group').classList.add('d-none');
+            } else {
+                document.getElementById('daily-days-group').classList.add('d-none');
+                document.getElementById('daily-date-group').classList.remove('d-none');
+            }
+        }
+
+        function saveDailyQuest(e) {
+            e.preventDefault();
+            const id = document.getElementById('daily-id').value;
+            const title = document.getElementById('daily-title').value.trim();
+            const type = document.getElementById('daily-type').value;
+
+            let days = [];
+            let calendarDate = '';
+            let yearly = false;
+
+            if (type === 'days') {
+                const checkboxes = document.querySelectorAll('#daily-days-group input:checked');
+                checkboxes.forEach(cb => days.push(parseInt(cb.value)));
+            } else {
+                calendarDate = document.getElementById('daily-calendar-date').value;
+                yearly = document.getElementById('daily-yearly').checked;
+            }
+
+            if(id) {
+                const daily = state.dailies.find(d => d.id === id);
+                if(daily) {
+                    daily.title = title; daily.type = type; daily.days = days;
+                    daily.calendarDate = calendarDate; daily.yearly = yearly;
+                }
+            } else {
+                state.dailies.push({
+                    id: Date.now().toString(), title, type, days, calendarDate, yearly,
+                    streak: 0, lastCompletedDate: '', lastActiveDateChecked: getTodayDateString()
+                });
+            }
+
+            saveToStorage();
+            toggleModal('modal-daily', false);
+            render();
+        }
+
+        function deleteDaily(id) {
+            const t = TRANSLATIONS[state.settings.lang];
+            if(confirm(t.confirm_del)) {
+                state.dailies = state.dailies.filter(d => d.id !== id);
+                saveToStorage();
+                render();
+            }
+        }
+
+        function editDaily(id) {
+            const d = state.dailies.find(daily => daily.id === id);
+            if(!d) return;
+            const t = TRANSLATIONS[state.settings.lang];
+            document.getElementById('modal-daily-title').innerText = t.daily_modal_edit;
+            document.getElementById('daily-id').value = d.id;
+            document.getElementById('daily-title').value = d.title;
+            document.getElementById('daily-type').value = d.type;
+            
+            switchDailyTypeFields(d.type);
+
+            if(d.type === 'days') {
+                document.querySelectorAll('#daily-days-group input').forEach(cb => {
+                    cb.checked = d.days.includes(parseInt(cb.value));
+                });
+            } else {
+                document.getElementById('daily-calendar-date').value = d.calendarDate || '';
+                document.getElementById('daily-yearly').checked = !!d.yearly;
+            }
+            toggleModal('modal-daily', true);
+        }
+
+        function toggleDailyCheck(id) {
+            const d = state.dailies.find(daily => daily.id === id);
+            if(!d) return;
+
+            const today = getTodayDateString();
+            if(d.lastCompletedDate === today) {
+                // Отмена выполнения
+                d.lastCompletedDate = '';
+                d.streak = Math.max(0, d.streak - 1);
+            } else {
+                // Выполнение квеста
+                d.lastCompletedDate = today;
+                d.streak += 1;
+                playChime();
+            }
+            saveToStorage();
+            render();
+        }
+
+        function getTodayDateString() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+
+        function isDailyActiveOnDate(daily, dateObj) {
+            if (daily.type === 'days') {
+                return daily.days.includes(dateObj.getDay());
+            } else {
+                if(!daily.calendarDate) return false;
+                if (daily.yearly) {
+                    const parts = daily.calendarDate.split('-'); // YYYY-MM-DD
+                    return (dateObj.getMonth() + 1) === parseInt(parts[1]) && dateObj.getDate() === parseInt(parts[2]);
+                } else {
+                    const targetStr = `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
+                    return daily.calendarDate === targetStr;
                 }
             }
         }
 
+        // Проверка пропусков и сброс страйков
+        function checkAndResetDailies() {
+            const todayStr = getTodayDateString();
+            const today = new Date();
+            
+            state.dailies.forEach(d => {
+                if(!d.lastActiveDateChecked) d.lastActiveDateChecked = todayStr;
+                if(d.lastActiveDateChecked === todayStr) return; // Уже проверяли сегодня
+
+                // Идем назад со вчерашнего дня и ищем последний день, когда квест БЫЛ активен
+                let checkDate = new Date();
+                checkDate.setDate(checkDate.getDate() - 1);
+                let wasActiveYesterdayOrBefore = false;
+                
+                // Проверяем последние 7 дней на активность
+                for(let i=0; i<7; i++) {
+                    if(isDailyActiveOnDate(d, checkDate)) {
+                        const checkDateStr = `${checkDate.getFullYear()}-${String(checkDate.getMonth()+1).padStart(2,'0')}-${String(checkDate.getDate()).padStart(2,'0')}`;
+                        // Если в тот активный день юзер не закомплитил квест, и этот день позже последнего выполненного — страйк сгорает!
+                        if(d.lastCompletedDate !== checkDateStr && (!d.lastCompletedDate || d.lastCompletedDate < checkDateStr)) {
+                            d.streak = 0;
+                        }
+                        break;
+                    }
+                    checkDate.setDate(checkDate.getDate() - 1);
+                }
+                d.lastActiveDateChecked = todayStr;
+            });
+            saveToStorage();
+        }
+
+        /* --- ОСТАЛЬНОЙ НАТИВНЫЙ ФУНКЦИОНАЛ --- */
         function previewImage(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
@@ -836,14 +721,9 @@
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    
-                    const maxW = 400;
-                    const scale = maxW / img.width;
-                    canvas.width = maxW;
-                    canvas.height = img.height * scale;
-                    
+                    canvas.width = 500; canvas.height = img.height * (500 / img.width);
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                    currentUploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.75);
                     document.getElementById('form-image-preview').innerHTML = `<img src="${currentUploadedImageBase64}">`;
                 }
             };
@@ -854,41 +734,24 @@
             if (!state.settings.sound) return;
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
-                if (!AudioContext) return;
-                const ctx = new AudioContext();
-                const now = ctx.currentTime;
-                
-                let osc1 = ctx.createOscillator(); let gain1 = ctx.createGain();
-                osc1.type = 'sine'; osc1.frequency.setValueAtTime(523.25, now);
-                gain1.gain.setValueAtTime(0.3, now); gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-                osc1.connect(gain1); gain1.connect(ctx.destination); osc1.start(now); osc1.stop(now + 0.4);
-
-                let osc2 = ctx.createOscillator(); let gain2 = ctx.createGain();
-                osc2.type = 'sine'; osc2.frequency.setValueAtTime(659.25, now + 0.1);
-                gain2.gain.setValueAtTime(0.3, now + 0.1); gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-                osc2.connect(gain2); gain2.connect(ctx.destination); osc2.start(now + 0.1); osc2.stop(now + 0.5);
-
-                let osc3 = ctx.createOscillator(); let gain3 = ctx.createGain();
-                osc3.type = 'sine'; osc3.frequency.setValueAtTime(783.99, now + 0.2);
-                gain3.gain.setValueAtTime(0.4, now + 0.2); gain3.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
-                osc3.connect(gain3); gain3.connect(ctx.destination); osc3.start(now + 0.2); osc3.stop(now + 0.8);
+                const ctx = new AudioContext(); const now = ctx.currentTime;
+                let o = ctx.createOscillator(); let g = ctx.createGain();
+                o.type = 'sine'; o.frequency.setValueAtTime(587.33, now);
+                g.gain.setValueAtTime(0.2, now); g.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                o.connect(g); g.connect(ctx.destination); o.start(now); o.stop(now + 0.4);
             } catch(e) {}
         }
 
-        function toggleModal(modalId, show) {
-            document.getElementById(modalId).style.display = show ? 'flex' : 'none';
-        }
-
-        function handleOverlayClick(e, modalId) {
-            if (e.target.id === modalId) toggleModal(modalId, false);
-        }
+        function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
+        function handleOverlayClick(e, id) { if (e.target.id === id) toggleModal(id, false); }
 
         function openCreateModal() {
-            document.getElementById('modal-ach-title').innerText = "Создать достижение";
+            const t = TRANSLATIONS[state.settings.lang];
+            document.getElementById('modal-ach-title').innerText = t.modal_create_title;
             document.getElementById('ach-form').reset();
             document.getElementById('form-id').value = '';
             currentUploadedImageBase64 = '';
-            document.getElementById('form-image-preview').innerHTML = `<span style="font-size:13px; color:var(--text-muted);">Нет изображения</span>`;
+            document.getElementById('form-image-preview').innerHTML = `<span style="font-size:13px; color:var(--text-muted);">${t.lbl_no_img}</span>`;
             document.getElementById('custom-cat-wrapper').classList.add('d-none');
             toggleFormProgressFields(false);
             updateCategorySelectOptions();
@@ -896,20 +759,14 @@
         }
 
         function checkCustomCategory(val) {
-            const wrapper = document.getElementById('custom-cat-wrapper');
-            if (val === '__custom__') {
-                wrapper.classList.remove('d-none');
-                document.getElementById('form-custom-cat').required = true;
-            } else {
-                wrapper.classList.add('d-none');
-                document.getElementById('form-custom-cat').required = false;
-            }
+            const w = document.getElementById('custom-cat-wrapper');
+            if (val === '__custom__') { w.classList.remove('d-none'); document.getElementById('form-custom-cat').required = true; }
+            else { w.classList.add('d-none'); document.getElementById('form-custom-cat').required = false; }
         }
 
         function toggleFormProgressFields(show) {
-            const fields = document.getElementById('form-progress-fields');
-            if(show) fields.classList.remove('d-none');
-            else fields.classList.add('d-none');
+            const f = document.getElementById('form-progress-fields');
+            if(show) f.classList.remove('d-none'); else f.classList.add('d-none');
         }
 
         function saveAchievement(e) {
@@ -924,93 +781,55 @@
             
             if (category === '__custom__') {
                 const customCat = document.getElementById('form-custom-cat').value.trim();
-                if(customCat && !state.categories.includes(customCat)) {
-                    state.categories.push(customCat);
-                }
-                category = customCat || 'Другое';
+                if(customCat && !state.categories.includes(customCat)) state.categories.push(customCat);
+                category = customCat || 'Other';
             }
 
-            let current = 0;
-            let max = 1;
-            let completed = false;
-
+            let current = 0; let max = 1; let completed = false;
             if (hasProgress) {
                 current = parseInt(document.getElementById('form-current').value) || 0;
                 max = parseInt(document.getElementById('form-max').value) || 1;
-                if (current >= max) {
-                    current = max;
-                    completed = true;
-                }
+                if (current >= max) { current = max; completed = true; }
             }
 
             if (id) {
                 const ach = state.achievements.find(a => a.id === id);
                 if (ach) {
                     const wasCompleted = ach.completed;
-                    ach.title = title;
-                    ach.desc = desc;
-                    ach.category = category;
-                    ach.rarity = rarity;
-                    ach.type = type;
-                    ach.hasProgress = hasProgress;
-                    ach.current = current;
-                    ach.max = max;
-                    ach.completed = completed;
+                    ach.title = title; ach.desc = desc; ach.category = category; ach.rarity = rarity; ach.type = type; ach.hasProgress = hasProgress; ach.current = current; ach.max = max; ach.completed = completed;
                     if(currentUploadedImageBase64) ach.image = currentUploadedImageBase64;
-                    
                     if (completed && !wasCompleted) triggerCelebration(ach);
                 }
             } else {
-                const newAch = {
-                    id: Date.now().toString(),
-                    title, desc, category, rarity, type, hasProgress, current, max, completed,
-                    image: currentUploadedImageBase64,
-                    level: 0
-                };
+                const newAch = { id: Date.now().toString(), title, desc, category, rarity, type, hasProgress, current, max, completed, image: currentUploadedImageBase64, level: 0 };
                 state.achievements.push(newAch);
                 if (completed) triggerCelebration(newAch);
             }
-
-            saveToStorage();
-            toggleModal('modal-achievement', false);
-            render();
+            saveToStorage(); toggleModal('modal-achievement', false); render();
         }
 
         function deleteAchievement(id) {
-            if(confirm("Удалить это достижение?")) {
-                state.achievements = state.achievements.filter(a => a.id !== id);
-                saveToStorage();
-                render();
-            }
+            if(confirm(TRANSLATIONS[state.settings.lang].confirm_del)) { state.achievements = state.achievements.filter(a => a.id !== id); saveToStorage(); render(); }
         }
 
         function editAchievement(id) {
             const ach = state.achievements.find(a => a.id === id);
             if(!ach) return;
-
-            document.getElementById('modal-ach-title').innerText = "Редактировать достижение";
+            const t = TRANSLATIONS[state.settings.lang];
+            document.getElementById('modal-ach-title').innerText = t.modal_edit_title;
             document.getElementById('form-id').value = ach.id;
             document.getElementById('form-title').value = ach.title;
             document.getElementById('form-desc').value = ach.desc;
-            
             currentUploadedImageBase64 = ach.image || '';
-            if(ach.image) {
-                document.getElementById('form-image-preview').innerHTML = `<img src="${ach.image}">`;
-            } else {
-                document.getElementById('form-image-preview').innerHTML = `<span style="font-size:13px; color:var(--text-muted);">Нет изображения</span>`;
-            }
-
+            document.getElementById('form-image-preview').innerHTML = ach.image ? `<img src="${ach.image}">` : `<span style="font-size:13px; color:var(--text-muted);">${t.lbl_no_img}</span>`;
             updateCategorySelectOptions();
             document.getElementById('form-cat').value = ach.category;
-            document.getElementById('custom-cat-wrapper').classList.add('d-none');
-
             document.getElementById('form-rarity').value = ach.rarity;
             document.getElementById('form-type').value = ach.type;
             document.getElementById('form-has-progress').value = ach.hasProgress ? 'yes' : 'no';
             toggleFormProgressFields(ach.hasProgress);
             document.getElementById('form-current').value = ach.current;
             document.getElementById('form-max').value = ach.max;
-
             toggleModal('modal-achievement', true);
         }
 
@@ -1018,122 +837,73 @@
             const select = document.getElementById('form-cat');
             if(!select) return;
             let html = '';
-            state.categories.forEach(c => {
-                html += `<option value="${c}">${c}</option>`;
-            });
-            html += `<option value="__custom__">+ Своя категория...</option>`;
+            state.categories.forEach(c => { html += `<option value="${c}">${c}</option>`; });
+            html += `<option value="__custom__">${TRANSLATIONS[state.settings.lang].opt_custom_cat}</option>`;
             select.innerHTML = html;
         }
 
         function toggleSimpleComplete(id) {
             const ach = state.achievements.find(a => a.id === id);
             if (!ach) return;
-            
             ach.completed = !ach.completed;
             if (ach.completed) {
-                if (ach.type === 'repeatable') {
-                    ach.level = (ach.level || 0) + 1;
-                    ach.completed = false; 
-                }
+                if (ach.type === 'repeatable') { ach.level = (ach.level || 0) + 1; ach.completed = false; }
                 triggerCelebration(ach);
             }
-            saveToStorage();
-            render();
+            saveToStorage(); render();
         }
 
         function adjustProgress(id, amount) {
             const ach = state.achievements.find(a => a.id === id);
             if (!ach) return;
             ach.current = Math.max(0, ach.current + amount);
-            checkProgressTarget(ach);
+            if (ach.current >= ach.max) {
+                if (ach.type === 'one-time') { ach.current = ach.max; if (!ach.completed) { ach.completed = true; triggerCelebration(ach); } }
+                else { ach.level = (ach.level || 0) + 1; ach.current = 0; triggerCelebration(ach); }
+            }
+            saveToStorage(); render();
         }
 
         function manualProgressInput(id, value) {
             const ach = state.achievements.find(a => a.id === id);
             if (!ach) return;
             ach.current = Math.max(0, parseInt(value) || 0);
-            checkProgressTarget(ach);
-        }
-
-        function checkProgressTarget(ach) {
             if (ach.current >= ach.max) {
-                if (ach.type === 'one-time') {
-                    ach.current = ach.max;
-                    if (!ach.completed) {
-                        ach.completed = true;
-                        triggerCelebration(ach);
-                    }
-                } else {
-                    ach.level = (ach.level || 0) + 1;
-                    ach.current = 0;
-                    triggerCelebration(ach);
-                }
+                if (ach.type === 'one-time') { ach.current = ach.max; ach.completed = true; triggerCelebration(ach); }
+                else { ach.level = (ach.level || 0) + 1; ach.current = 0; triggerCelebration(ach); }
             }
-            saveToStorage();
-            render();
+            saveToStorage(); render();
         }
 
         function calculateStats() {
+            const t = TRANSLATIONS[state.settings.lang];
             let totalAP = 0; let doneCount = 0;
             state.achievements.forEach(ach => {
-                const itemAp = RARITIES[ach.rarity].ap;
-                if (ach.type === 'repeatable') totalAP += (ach.level || 0) * itemAp;
-                else if (ach.completed) totalAP += itemAp;
-
+                if (ach.type === 'repeatable') totalAP += (ach.level || 0) * RARITIES[ach.rarity].ap;
+                else if (ach.completed) totalAP += RARITIES[ach.rarity].ap;
                 if (ach.completed || (ach.type === 'repeatable' && (ach.level || 0) > 0)) doneCount++;
             });
-
             const totalCount = state.achievements.length;
             const percent = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
-
-            let medal = "🥚 Новичок";
-            if (totalAP >= 2500) medal = "👑 Корона";
-            else if (totalAP >= 1000) medal = "💎 Алмаз";
-            else if (totalAP >= 500) medal = "🥇 Золото";
-            else if (totalAP >= 250) medal = "🥈 Серебро";
-            else if (totalAP >= 100) medal = "🥉 Бронза";
-
+            let medal = t.ranks.r1;
+            if (totalAP >= 2500) medal = t.ranks.r6; else if (totalAP >= 1000) medal = t.ranks.r5; else if (totalAP >= 500) medal = t.ranks.r4; else if (totalAP >= 250) medal = t.ranks.r3; else if (totalAP >= 100) medal = t.ranks.r2;
             return { totalAP, doneCount, totalCount, percent, medal };
         }
 
         function triggerCelebration(ach) {
-            const overlay = document.getElementById('celebration-overlay');
+            const t = TRANSLATIONS[state.settings.lang];
+            document.getElementById('cel-title_banner').innerText = t.cel_banner;
             document.getElementById('cel-ach-name').innerText = ach.title;
-            document.getElementById('cel-rarity').innerText = RARITIES[ach.rarity].name;
+            document.getElementById('cel-rarity').innerText = t.rarities[ach.rarity];
             document.getElementById('cel-rarity').style.color = RARITIES[ach.rarity].color;
             document.getElementById('cel-ap').innerText = RARITIES[ach.rarity].ap;
-
-            const medals = ['🏆', '🏅', '⭐', '✨', '👑'];
-            document.getElementById('cel-medal').innerText = medals[Math.floor(Math.random() * medals.length)];
-
-            overlay.style.display = 'flex';
+            document.getElementById('celebration-overlay').style.display = 'flex';
             playChime();
-            createConfetti();
-
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                const particles = document.querySelectorAll('.confetti-particle');
-                particles.forEach(p => p.remove());
-            }, 3500);
-        }
-
-        function createConfetti() {
-            if (!state.settings.animations) return;
-            const container = document.getElementById('celebration-overlay');
-            const colors = ['#f43f5e', '#3b82f6', '#eab308', '#22c55e', '#a855f7', '#f97316'];
-            for (let i = 0; i < 50; i++) {
-                const p = document.createElement('div');
-                p.classList.add('confetti-particle');
-                p.style.left = Math.random() * 100 + 'vw';
-                p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                p.style.transform = `scale(${Math.random() * 1.2 + 0.5})`;
-                p.style.animationDelay = Math.random() * 2 + 's';
-                p.style.animationDuration = Math.random() * 1.5 + 1.5 + 's';
-                container.appendChild(p);
-            }
+            setTimeout(() => { document.getElementById('celebration-overlay').style.display = 'none'; }, 2500);
         }
 
         function render() {
+            const t = TRANSLATIONS[state.settings.lang];
             const calc = calculateStats();
             document.getElementById('stat-total-ap').innerText = calc.totalAP;
             document.getElementById('stat-count-done').innerText = `${calc.doneCount}/${calc.totalCount}`;
@@ -1141,8 +911,50 @@
             document.getElementById('global-progress-bar').style.width = `${calc.percent}%`;
             document.getElementById('global-medal').innerText = calc.medal;
 
-            renderFilters();
+            // РЕНДЕР ДЕЙЛИКОВ
+            const dailyContainer = document.getElementById('daily-list-container');
+            dailyContainer.innerHTML = '';
+            
+            if(state.dailies.length === 0) {
+                dailyContainer.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:10px;">${state.settings.lang === 'ru' ? 'Нет активных ежедневных квестов' : 'No daily quests active'}</div>`;
+            } else {
+                const today = new Date();
+                const todayStr = getTodayDateString();
 
+                state.dailies.forEach(d => {
+                    const isActiveToday = isDailyActiveOnDate(d, today);
+                    const isCompletedToday = d.lastCompletedDate === todayStr;
+
+                    let scheduleDesc = '';
+                    if (d.type === 'days') {
+                        const dayNames = d.days.map(dayNum => t['day_' + dayNum]);
+                        scheduleDesc = `${t.schedule_days} ${dayNames.join(', ')}`;
+                    } else {
+                        scheduleDesc = d.yearly ? `${t.schedule_yearly} ${d.calendarDate.substring(5)}` : `${t.schedule_date} ${d.calendarDate}`;
+                    }
+
+                    const statusBadge = isActiveToday ? `<span style="color:var(--rarity-uncommon); font-size:11px; font-weight:bold;">● ${t.schedule_today}</span>` : `<span style="color:var(--text-muted); font-size:11px;">○ ${t.schedule_inactive}</span>`;
+
+                    let html = `
+                        <div class="daily-item" style="${isCompletedToday ? 'opacity: 0.6;' : ''}">
+                            <div class="daily-info">
+                                <div class="daily-name">${d.title} ${statusBadge}</div>
+                                <div class="daily-schedule-text">${scheduleDesc}</div>
+                                <div class="streak-badge">🔥 ${t.streak_text} ${d.streak}</div>
+                            </div>
+                            <div class="daily-actions">
+                                <button class="checkbox-btn ${isCompletedToday ? 'checked' : ''}" ${!isActiveToday ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''} onclick="toggleDailyCheck('${d.id}')">✓</button>
+                                <button class="btn btn-secondary btn-sm" onclick="editDaily('${d.id}')">✏️</button>
+                                <button class="btn btn-secondary btn-sm btn-danger" onclick="deleteDaily('${d.id}')">🗑️</button>
+                            </div>
+                        </div>
+                    `;
+                    dailyContainer.insertAdjacentHTML('beforeend', html);
+                });
+            }
+
+            // РЕНДЕР КАРТОЧЕК ДОСТИЖЕНИЙ
+            renderFilters();
             const container = document.getElementById('achievements-container');
             container.innerHTML = '';
             const searchQuery = document.getElementById('search-bar').value.toLowerCase();
@@ -1150,7 +962,6 @@
             let filtered = state.achievements.filter(ach => {
                 const matchSearch = ach.title.toLowerCase().includes(searchQuery) || ach.desc.toLowerCase().includes(searchQuery);
                 if (!matchSearch) return false;
-
                 const f = state.activeFilter;
                 if (f === 'all') return true;
                 if (f === 'one-time') return ach.type === 'one-time';
@@ -1162,57 +973,46 @@
             });
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-muted);">Ничего не найдено 🤔</div>`;
+                container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">${t.no_items}</div>`;
                 return;
             }
 
             filtered.forEach(ach => {
                 const rarityData = RARITIES[ach.rarity];
                 const isDone = ach.completed || (ach.type === 'repeatable' && ach.level > 0);
+                const localRarityName = t.rarities[ach.rarity];
+                const typeLabel = ach.type === 'one-time' ? t.opt_one : `${t.opt_rep} (Lvl ${ach.level || 0})`;
                 
-                let imgBlockHtml = '';
-                if(ach.image) {
-                    imgBlockHtml = `<div class="card-image-wrap"><img src="${ach.image}" alt=""></div>`;
-                } else {
-                    imgBlockHtml = `<div class="card-image-wrap"><div class="card-image-placeholder">${rarityData.icon}</div></div>`;
-                }
+                let imgBlockHtml = ach.image ? `<div class="card-image-wrap"><img src="${ach.image}" alt=""></div>` : `<div class="card-image-wrap"><div class="card-image-placeholder">${rarityData.icon}</div></div>`;
 
                 let cardHtml = `
                     <div class="card ${isDone ? 'completed' : ''}">
-                        <div>
-                            ${imgBlockHtml}
-                            <div class="card-header">
-                                <div class="card-title">${ach.title}</div>
-                                <div style="font-weight:bold; color:${rarityData.color}; font-size:14px; white-space:nowrap;">
-                                    +${rarityData.ap} AP
+                        ${imgBlockHtml}
+                        <div class="card-content-padding">
+                            <div>
+                                <div class="card-header">
+                                    <div class="card-title">${ach.title}</div>
+                                    <div style="font-weight:bold; color:${rarityData.color}; font-size:14px;">+${rarityData.ap} AP</div>
+                                </div>
+                                <div class="card-desc">${ach.desc || t.txt_no_desc}</div>
+                                <div class="badge-row">
+                                    <span class="badge badge-rarity" style="background:${rarityData.color}">${localRarityName}</span>
+                                    <span class="badge badge-cat">📂 ${ach.category}</span>
+                                    <span class="badge badge-type">${typeLabel}</span>
                                 </div>
                             </div>
-                            <div class="card-desc">${ach.desc || 'Нет описания'}</div>
-                            
-                            <div class="badge-row">
-                                <span class="badge badge-rarity" style="background:${rarityData.color}">${rarityData.name}</span>
-                                <span class="badge badge-cat">📂 ${ach.category}</span>
-                                <span class="badge badge-type">${ach.type === 'one-time' ? 'Одноразовое' : `Повторяемое (Лвл ${ach.level || 0})`}</span>
-                            </div>
-                        </div>
-
-                        <div>
+                            <div>
                 `;
 
                 if (ach.hasProgress) {
                     const progPercent = Math.min(100, Math.round((ach.current / ach.max) * 100));
                     cardHtml += `
                         <div class="card-interactive">
-                            <div class="card-progress-text">
-                                <span>Прогресс</span>
-                                <span>${ach.current} / ${ach.max}</span>
-                            </div>
-                            <div class="progress-container" style="height:6px; margin-bottom:10px;">
-                                <div class="progress-bar" style="width: ${progPercent}%; background: ${rarityData.color}"></div>
-                            </div>
+                            <div class="card-progress-text"><span>${t.lbl_progress}</span><span>${ach.current} / ${ach.max}</span></div>
+                            <div class="progress-container" style="height:6px; margin-bottom:10px;"><div class="progress-bar" style="width:${progPercent}%; background:${rarityData.color}"></div></div>
                             <div class="card-interactive-controls">
                                 <button class="btn btn-secondary interactive-btn" onclick="adjustProgress('${ach.id}', -1)">-</button>
-                                <input type="number" class="form-control" style="padding:4px 8px; font-size:13px; text-align:center; max-width:70px;" value="${ach.current}" onchange="manualProgressInput('${ach.id}', this.value)">
+                                <input type="number" class="form-control" style="padding:4px; font-size:13px; text-align:center; max-width:70px;" value="${ach.current}" onchange="manualProgressInput('${ach.id}', this.value)">
                                 <button class="btn btn-secondary interactive-btn" onclick="adjustProgress('${ach.id}', 1)">+</button>
                             </div>
                         </div>
@@ -1220,19 +1020,18 @@
                 } else {
                     cardHtml += `
                         <div class="card-interactive" style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-size:13px; font-weight:600;">Выполнено:</span>
-                            <button class="checkbox-btn ${ach.completed ? 'checked' : ''}" onclick="toggleSimpleComplete('${ach.id}')">
-                                ✓
-                            </button>
+                            <span style="font-size:13px; font-weight:600;">${t.txt_done_label}</span>
+                            <button class="checkbox-btn ${ach.completed ? 'checked' : ''}" onclick="toggleSimpleComplete('${ach.id}')">✓</button>
                         </div>
                     `;
                 }
 
                 cardHtml += `
-                            <div class="card-actions">
-                                <div class="action-left">
-                                    <button class="btn btn-secondary btn-sm" style="flex:1;" onclick="editAchievement('${ach.id}')">✏️ Редактировать</button>
-                                    <button class="btn btn-secondary btn-sm btn-danger" style="color:white; padding: 6px 12px;" onclick="deleteAchievement('${ach.id}')">🗑️</button>
+                                <div class="card-actions">
+                                    <div style="display:flex; gap:6px; width:100%;">
+                                        <button class="btn btn-secondary btn-sm" style="flex:1;" onclick="editAchievement('${ach.id}')">${t.btn_edit}</button>
+                                        <button class="btn btn-secondary btn-sm btn-danger" onclick="deleteAchievement('${ach.id}')">🗑️</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1240,149 +1039,70 @@
                 `;
                 container.insertAdjacentHTML('beforeend', cardHtml);
             });
-
             updateDetailedStats();
-            updateCategorySelectOptions();
         }
 
         function renderFilters() {
+            const t = TRANSLATIONS[state.settings.lang];
             const list = document.getElementById('filters-list');
-            const currentFilter = state.activeFilter;
-            
-            let tags = [
-                { id: 'all', label: '🌍 Все' },
-                { id: 'completed', label: '✅ Выполненные' },
-                { id: 'uncompleted', label: '⏳ Невыполненные' },
-                { id: 'one-time', label: '🎯 Одноразовые' },
-                { id: 'repeatable', label: '🔄 Повторяемые' },
-            ];
-
-            Object.keys(RARITIES).forEach(key => {
-                tags.push({ id: key, label: `✨ ${RARITIES[key].name}` });
-            });
-
-            state.categories.forEach(cat => {
-                tags.push({ id: cat, label: `📂 ${cat}` });
-            });
+            let tags = [{ id: 'all', label: t.filter_all }, { id: 'completed', label: t.filter_done }, { id: 'uncompleted', label: t.filter_undone }, { id: 'one-time', label: t.filter_one }, { id: 'repeatable', label: t.filter_rep }];
+            Object.keys(RARITIES).forEach(k => tags.push({ id: k, label: `✨ ${t.rarities[k]}` }));
+            state.categories.forEach(c => tags.push({ id: c, label: `📂 ${c}` }));
 
             let html = '';
-            tags.forEach(t => {
-                const activeClass = currentFilter === t.id ? 'active' : '';
-                html += `<div class="filter-tag ${activeClass}" onclick="setFilter('${t.id}')">${t.label}</div>`;
-            });
+            tags.forEach(tg => { html += `<div class="filter-tag ${state.activeFilter === tg.id ? 'active' : ''}" onclick="state.activeFilter='${tg.id}'; render();">${tg.label}</div>`; });
             list.innerHTML = html;
         }
 
-        function setFilter(filterId) {
-            state.activeFilter = filterId;
-            render();
-        }
-
         function syncSettingsForm() {
-            document.getElementById('setting-theme').value = state.settings.theme || 'dark';
-            document.getElementById('setting-anim').checked = state.settings.animations !== false;
-            document.getElementById('setting-sound').checked = state.settings.sound !== false;
+            document.getElementById('setting-lang').value = state.settings.lang;
+            document.getElementById('setting-theme').value = state.settings.theme;
+            document.getElementById('setting-anim').checked = state.settings.animations;
+            document.getElementById('setting-sound').checked = state.settings.sound;
         }
 
         function saveSettings() {
+            state.settings.lang = document.getElementById('setting-lang').value;
             state.settings.theme = document.getElementById('setting-theme').value;
             state.settings.animations = document.getElementById('setting-anim').checked;
             state.settings.sound = document.getElementById('setting-sound').checked;
-            saveToStorage();
-            applyTheme(state.settings.theme);
-            applyAnimationSetting();
-            toggleModal('modal-settings', false);
-            render();
+            saveToStorage(); applyTheme(state.settings.theme); applyAnimationSetting(); changeLanguage(state.settings.lang); toggleModal('modal-settings', false);
         }
 
-        function applyTheme(theme) {
-            if(theme === 'light') document.body.classList.add('light-theme');
-            else document.body.classList.remove('light-theme');
-        }
-
-        function applyAnimationSetting() {
-            if(state.settings.animations === false) document.body.classList.add('no-animations');
-            else document.body.classList.remove('no-animations');
-        }
+        function applyTheme(t) { if(t === 'light') document.body.classList.add('light-theme'); else document.body.classList.remove('light-theme'); }
+        function applyAnimationSetting() { if(!state.settings.animations) document.body.classList.add('no-animations'); else document.body.classList.remove('no-animations'); }
 
         function clearAllData() {
-            if (confirm("Вы уверены, что хотите БЕЗВОЗВРАТНО удалить все достижения и сбросить прогресс?")) {
-                localStorage.removeItem('life_achievements_state');
-                state = {
-                    achievements: [],
-                    categories: ['Учёба', 'Спорт', 'Жизнь', 'Игры', 'Шуточные', 'Другое'],
-                    settings: { theme: 'dark', animations: true, sound: true },
-                    activeFilter: 'all'
-                };
-                applyTheme('dark'); applyAnimationSetting(); syncSettingsForm();
-                toggleModal('modal-settings', false);
-                render();
-            }
+            if (confirm(TRANSLATIONS[state.settings.lang].confirm_reset)) { localStorage.removeItem('life_achievements_state'); fallbackState(); window.location.reload(); }
         }
 
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `life_achievements_backup_${Date.now()}.json`);
-            document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
+            const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", `achievements_backup.json`); dl.click();
         }
 
-        function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        function importData(ev) {
+            const file = ev.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    const parsed = JSON.parse(e.target.result);
-                    if (parsed && Array.isArray(parsed.achievements)) {
-                        state = parsed; state.activeFilter = 'all';
-                        saveToStorage(); applyTheme(state.settings.theme || 'dark');
-                        applyAnimationSetting(); syncSettingsForm(); render();
-                        alert("Данные успешно импортированы!"); toggleModal('modal-settings', false);
-                    } else { alert("Некорректный формат файла."); }
-                } catch (err) { alert("Ошибка при чтении файла."); }
+                    const p = JSON.parse(e.target.result);
+                    if (p && Array.isArray(p.achievements)) { state = p; saveToStorage(); window.location.reload(); }
+                } catch (err) { alert('Error reading file.'); }
             };
             reader.readAsText(file);
         }
 
         function updateDetailedStats() {
-            const content = document.getElementById('detailed-stats-content');
-            if(!content) return;
-            
+            const content = document.getElementById('detailed-stats-content'); if(!content) return;
+            const t = TRANSLATIONS[state.settings.lang];
             let total = state.achievements.length;
-            let oneTimeCount = state.achievements.filter(a => a.type === 'one-time').length;
-            let repeatableCount = state.achievements.filter(a => a.type === 'repeatable').length;
-            let completedOneTime = state.achievements.filter(a => a.type === 'one-time' && a.completed).length;
-            let activeRepeatable = state.achievements.filter(a => a.type === 'repeatable' && a.level > 0).length;
-            let completedTotal = completedOneTime + activeRepeatable;
-            let uncompletedTotal = total - completedTotal;
-
-            let maxRarityWeight = -1; let highestRarityName = "Нет";
-            const weight = { common:0, uncommon:1, rare:2, epic:3, legendary:4, mythic:5 };
-            let topLeveledAchName = "Нет"; let maxLevel = 0;
-            let calc = calculateStats();
-
-            state.achievements.forEach(a => {
-                const isAchDone = a.completed || (a.type === 'repeatable' && a.level > 0);
-                if (isAchDone && weight[a.rarity] > maxRarityWeight) {
-                    maxRarityWeight = weight[a.rarity]; highestRarityName = RARITIES[a.rarity].name;
-                }
-                if (a.type === 'repeatable' && (a.level || 0) > maxLevel) {
-                    maxLevel = a.level; topLeveledAchName = `${a.title} (Ур. ${a.level})`;
-                }
-            });
-
+            let compl = state.achievements.filter(a => a.completed || (a.type === 'repeatable' && a.level > 0)).length;
             content.innerHTML = `
-                <div style="display:flex; justify-content:space-between;"><span>Всего достижений:</span> <b>${total}</b></div>
-                <div style="display:flex; justify-content:space-between;"><span>Выполнено:</span> <span style="color:var(--rarity-uncommon)"><b>${completedTotal}</b></span></div>
-                <div style="display:flex; justify-content:space-between;"><span>Осталось выполнить:</span> <span style="color:var(--text-muted)"><b>${uncompletedTotal}</b></span></div>
-                <div style="display:flex; justify-content:space-between;"><span>Заработано очков (AP):</span> <span style="color:var(--accent)"><b>${calc.totalAP} AP</b></span></div>
-                <div style="display:flex; justify-content:space-between;"><span>Текущий ранг:</span> <b>${calc.medal}</b></div>
-                <div style="display:flex; justify-content:space-between;"><span>Одноразовых карточек:</span> <b>${oneTimeCount}</b></div>
-                <div style="display:flex; justify-content:space-between;"><span>Повторяемых карточек:</span> <b>${repeatableCount}</b></div>
-                <div style="display:flex; justify-content:space-between;"><span>Высшая открытая редкость:</span> <b>${highestRarityName}</b></div>
-                <div style="display:flex; justify-content:space-between;"><span>Самое прокачанное:</span> <b>${maxLevel > 0 ? topLeveledAchName : 'Нет'}</b></div>
+                <div>${t.stat_total} <b>${total}</b></div>
+                <div>${t.stat_done} <b style="color:var(--rarity-uncommon)">${compl}</b></div>
+                <div>${t.stat_left} <b>${total - compl}</b></div>
+                <div>${t.stat_ap} <b style="color:var(--accent)">${calculateStats().totalAP} AP</b></div>
             `;
         }
     </script>
