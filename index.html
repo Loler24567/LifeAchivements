@@ -185,7 +185,7 @@
         <div class="section-title" data-i18n="title_achievements">🏆 Achievements</div>
         <div class="controls-row">
             <input type="text" class="search-input" id="search-bar" placeholder="Search..." oninput="render()">
-            <button class="btn" onclick="openCreateModal()" id="btn-create-main">➕ Create</button>
+            <button class="btn" onclick="openCreateModal()" id="btn-create-main" data-i18n="btn_create">➕ Create</button>
         </div>
 
         <div class="filters-container" id="filters-list"></div>
@@ -521,46 +521,50 @@
             render();
         }
 
-        function translateStaticHTML() {
+	function translateStaticHTML() {
             const lang = state.settings.lang;
-            const t = TRANSLATIONS[lang];
+            const t = TRANSLATIONS[lang]; // Берем нужный словарь (ru или en)
 
+            // Переводим обычный текст на странице
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (t[key]) el.innerText = t[key];
             });
 
+            // Переводим Placeholder
             document.getElementById('search-bar').placeholder = t.search_holder;
-            document.getElementById('btn-create-main').innerText = t.btn_create;
-            document.getElementById('lbl-no-img').innerText = t.lbl_no_img;
 
-            // Полное исправление селекторов создания достижения
-            document.getElementById('form-rarity').innerHTML = `
-                <option value="common">${t.rarities.common} (10 AP)</option>
-                <option value="uncommon">${t.rarities.uncommon} (15 AP)</option>
-                <option value="rare">${t.rarities.rare} (25 AP)</option>
-                <option value="epic">${t.rarities.epic} (50 AP)</option>
-                <option value="legendary">${t.rarities.legendary} (100 AP)</option>
-                <option value="mythic">${t.rarities.mythic} (150 AP)</option>
-            `;
-            document.getElementById('form-type').innerHTML = `
+            // --- ОБНОВЛЕНИЕ ВЫПАДАЮЩИХ СПИСКОВ ---
+            const raritySelect = document.getElementById('form-rarity');
+            const typeSelect = document.getElementById('form-type');
+            const progressSelect = document.getElementById('form-has-progress');
+
+            // Запоминаем, что было выбрано
+            const rVal = raritySelect.value;
+            const tVal = typeSelect.value;
+            const pVal = progressSelect.value;
+
+            // Обновляем список редкостей, используя текущий словарь t
+            raritySelect.innerHTML = Object.keys(t.rarities).map(key => 
+                `<option value="${key}">${t.rarities[key]}</option>`
+            ).join('');
+
+            // Обновляем список типов
+            typeSelect.innerHTML = `
                 <option value="one-time">${t.opt_one}</option>
                 <option value="repeatable">${t.opt_rep}</option>
             `;
-            document.getElementById('form-has-progress').innerHTML = `
+
+            // Обновляем выбор прогресса
+            progressSelect.innerHTML = `
                 <option value="no">${t.opt_no}</option>
                 <option value="yes">${t.opt_yes}</option>
             `;
-        }
 
-        /* --- ЛОГИКА ЕЖЕДНЕВНЫХ ЗАДАНИЙ И СТРАЙКОВ --- */
-        function openDailyModal() {
-            const t = TRANSLATIONS[state.settings.lang];
-            document.getElementById('modal-daily-title').innerText = t.daily_modal_title;
-            document.getElementById('daily-form').reset();
-            document.getElementById('daily-id').value = '';
-            switchDailyTypeFields('days');
-            toggleModal('modal-daily', true);
+            // Возвращаем выбор пользователя обратно
+            raritySelect.value = rVal;
+            typeSelect.value = tVal;
+            progressSelect.value = pVal;
         }
 
         function switchDailyTypeFields(type) {
