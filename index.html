@@ -761,6 +761,17 @@
             updateCategorySelectOptions();
             toggleModal('modal-achievement', true);
         }
+	function openDailyModal() {
+            const t = TRANSLATIONS[state.settings.lang];
+            document.getElementById('modal-daily-title').innerText = t.daily_modal_title;
+            document.getElementById('daily-form').reset();
+            document.getElementById('daily-id').value = '';
+            
+            // По умолчанию показываем поля для дней недели
+            switchDailyTypeFields('days');
+            
+            toggleModal('modal-daily', true);
+        }
 
         function checkCustomCategory(val) {
             const w = document.getElementById('custom-cat-wrapper');
